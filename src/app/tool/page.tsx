@@ -1,9 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import { Header } from '../../components/Header';
+import { Footer } from '../../components/Footer';
 import { IntakeWizard } from '../../components/IntakeWizard';
 import { SpecViewer } from '../../components/SpecViewer';
+import { BlueprintLoader } from '../../components/BlueprintLoader';
 import { PRESETS } from '../../data/presets';
 import {
   ArchitectureSpec,
@@ -18,11 +21,37 @@ export default function ToolPage() {
     PRESETS[0].sampleSpec
   );
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [pendingConceptName, setPendingConceptName] = useState<string>('');
+  const resultSectionRef = useRef<HTMLElement>(null);
 
-  const scrollToResult = () => {
-    const el = document.getElementById('blueprint-result');
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const tpl = params.get('template');
+    if (tpl) {
+      const found = PRESETS.find((p) => p.id === tpl);
+      if (found) {
+        setSelectedPresetId(found.id);
+        setActiveSpec(found.sampleSpec);
+      }
+    }
+  }, []);
+
+  const revealAndScrollToResult = () => {
+    const el = resultSectionRef.current || document.getElementById('blueprint-result');
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      gsap.fromTo(
+        el,
+        { y: 24, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power3.out',
+          clearProps: 'transform',
+        }
+      );
     }
   };
 
@@ -45,7 +74,21 @@ export default function ToolPage() {
     selectedModules: string[];
     scaleTarget: string;
   }) => {
+    const startTime = Date.now();
+    const minLoaderMs = 1600;
+
+    setPendingConceptName(values.conceptName);
     setIsGenerating(true);
+
+    // Scroll toward the loader/result section so the user sees the 4-stage blueprint synthesis
+    setTimeout(() => {
+      const el = resultSectionRef.current || document.getElementById('blueprint-result');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 60);
+
+    let synthesizedSpec: ArchitectureSpec | null = null;
 
     try {
       const authMapped =
@@ -82,7 +125,7 @@ export default function ToolPage() {
         const data = await res.json();
         if (data.success && data.spec) {
           const raw = data.spec;
-          const mappedSpec: ArchitectureSpec = {
+          synthesizedSpec = {
             id: raw.id || `spec-${Date.now().toString().slice(-6)}`,
             conceptName: raw.projectName || values.conceptName,
             problemStatement: raw.intake?.concept || values.problemStatement,
@@ -339,21 +382,16 @@ export default function ToolPage() {
                 'Smart caching keeps your monthly server bills low even during traffic spikes',
             },
           };
-
-          setActiveSpec(mappedSpec);
-          setIsGenerating(false);
-          setTimeout(scrollToResult, 100);
-          return;
         }
       }
     } catch (err) {
       console.warn('Fallback to local synthesis', err);
     }
 
-    setTimeout(() => {
+    if (!synthesizedSpec) {
       const basePreset =
         PRESETS.find((p) => p.id === selectedPresetId) || PRESETS[0];
-      const customSpec: ArchitectureSpec = {
+      synthesizedSpec = {
         ...basePreset.sampleSpec,
         id: `spec-${Date.now().toString().slice(-6)}`,
         conceptName: values.conceptName,
@@ -364,11 +402,18 @@ export default function ToolPage() {
         deploymentTarget: values.deploymentTarget,
         generatedAt: new Date().toISOString(),
       };
+    }
 
-      setActiveSpec(customSpec);
+    const elapsed = Date.now() - startTime;
+    const remainingMs = Math.max(0, minLoaderMs - elapsed);
+
+    setTimeout(() => {
+      if (synthesizedSpec) {
+        setActiveSpec(synthesizedSpec);
+      }
       setIsGenerating(false);
-      setTimeout(scrollToResult, 100);
-    }, 400);
+      setTimeout(revealAndScrollToResult, 60);
+    }, remainingMs);
   };
 
   return (
@@ -395,25 +440,37 @@ export default function ToolPage() {
           />
         </section>
 
-        {/* Generated Result */}
-        <section id="blueprint-result" className="pt-4 border-t border-zinc-800/80">
-          <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">
-                Your Generated Blueprint
-              </span>
-              <h2 className="text-xl font-bold text-white mt-0.5">
-                {activeSpec.conceptName}
-              </h2>
-            </div>
-            <span className="text-xs text-zinc-400">
-              Click any tab below to explore or download files at the bottom
-            </span>
-          </div>
+        {/* Generated Result or Multi-Stage Blueprint Loader */}
+        <section
+          id="blueprint-result"
+          ref={resultSectionRef}
+          className="pt-4 border-t border-zinc-800/80"
+        >
+          {isGenerating ? (
+            <BlueprintLoader conceptName={pendingConceptName} />
+          ) : (
+            <>
+              <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">
+                    Your Generated Blueprint
+                  </span>
+                  <h2 className="text-xl font-bold text-white mt-0.5">
+                    {activeSpec.conceptName}
+                  </h2>
+                </div>
+                <span className="text-xs text-zinc-400">
+                  Click any tab below to explore or download files at the bottom
+                </span>
+              </div>
 
-          <SpecViewer spec={activeSpec} />
+              <SpecViewer spec={activeSpec} />
+            </>
+          )}
         </section>
       </main>
+
+      <Footer />
     </div>
   );
 }

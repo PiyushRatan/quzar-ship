@@ -122,3 +122,100 @@ body {
   scrollbar-width: thin;
   scrollbar-color: #27272a #09090b;
 }
+
+/* Dynamic Zero-Reflow Cursor-Tracking Border & Surface Glow (Directives 2.0) */
+.cursor-glow-card {
+  --cursor-x: -9999px;
+  --cursor-y: -9999px;
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.cursor-glow-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    420px circle at var(--cursor-x) var(--cursor-y),
+    rgba(34, 211, 238, 0.09),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cursor-glow-card.cursor-glow-amber::before {
+  background: radial-gradient(
+    420px circle at var(--cursor-x) var(--cursor-y),
+    rgba(251, 191, 36, 0.09),
+    transparent 65%
+  );
+}
+
+.cursor-glow-card.cursor-glow-subtle::before {
+  background: radial-gradient(
+    360px circle at var(--cursor-x) var(--cursor-y),
+    rgba(255, 255, 255, 0.06),
+    transparent 65%
+  );
+}
+
+.cursor-glow-card:hover::before {
+  opacity: 1;
+}
+
+/* Smooth Architectural Keyframes */
+@keyframes pulse-glow-cyan {
+  0%, 100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes scanline-sweep {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(300%);
+  }
+}
+
+@keyframes float-subtle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow-cyan 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-scanline {
+  animation: scanline-sweep 5s linear infinite;
+}
+
+.animate-float-subtle {
+  animation: float-subtle 5s ease-in-out infinite;
+}
+
+/* Reduced Motion Safeguards */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-glow-card::before,
+  .animate-pulse-glow,
+  .animate-scanline,
+  .animate-float-subtle {
+    animation: none !important;
+    transition: none !important;
+  }
+}

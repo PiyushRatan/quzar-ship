@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import { ArchitectureSpec, SprintDay } from '../types/spec';
 import { downloadFile, slugify } from '../lib/utils';
 import { ArchitectureTab } from './spec-tabs/ArchitectureTab';
@@ -32,6 +33,9 @@ export function SpecViewer({ spec }: SpecViewerProps) {
   const [sprintDays, setSprintDays] = useState<SprintDay[]>(spec.sprintRoadmap.days);
   const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
 
+  const tabContentRef = useRef<HTMLDivElement>(null);
+  const roadmapFillRef = useRef<HTMLDivElement>(null);
+
   // Sync sprint days when spec changes
   useEffect(() => {
     setSprintDays(spec.sprintRoadmap.days);
@@ -44,7 +48,68 @@ export function SpecViewer({ spec }: SpecViewerProps) {
   };
 
   const completedCount = sprintDays.filter((d) => d.completed).length;
-  const progressPercent = Math.round((completedCount / sprintDays.length) * 100);
+  const progressPercent = sprintDays.length
+    ? Math.round((completedCount / sprintDays.length) * 100)
+    : 0;
+
+  // GSAP In-Page Tab Morphing & Staggered Content Reveal
+  useEffect(() => {
+    if (!tabContentRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        tabContentRef.current,
+        { y: 16, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.35,
+          ease: 'power2.out',
+          clearProps: 'transform',
+        }
+      );
+
+      const childBlocks = tabContentRef.current?.querySelectorAll(':scope > div > *');
+      if (childBlocks && childBlocks.length > 0) {
+        gsap.fromTo(
+          childBlocks,
+          { y: 12, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.32,
+            stagger: 0.05,
+            ease: 'power2.out',
+            clearProps: 'transform',
+          }
+        );
+      }
+    }, tabContentRef);
+
+    return () => ctx.revert();
+  }, [activeTab, spec.id]);
+
+  // Smooth GSAP animation for 14-day roadmap progress bar fill when tasks are checked/unchecked
+  useEffect(() => {
+    if (roadmapFillRef.current) {
+      gsap.to(roadmapFillRef.current, {
+        width: `${progressPercent}%`,
+        duration: 0.45,
+        ease: 'power3.out',
+      });
+    }
+
+    if (activeTab === 'roadmap' && tabContentRef.current) {
+      const innerBar = tabContentRef.current.querySelector('.h-full.bg-cyan-400');
+      if (innerBar) {
+        gsap.to(innerBar, {
+          width: `${progressPercent}%`,
+          duration: 0.45,
+          ease: 'power3.out',
+        });
+      }
+    }
+  }, [progressPercent, activeTab]);
 
   const handleExport = (format: 'architecture' | 'prisma' | 'prd' | 'json') => {
     let content = '';
@@ -155,16 +220,32 @@ ${d.deliverables.map((del) => `- [${d.completed ? 'x' : ' '}] ${del}`).join('\n'
           </p>
         </div>
 
-        {/* Primitive Badges */}
-        <div className="flex flex-wrap items-center gap-1.5 self-start md:self-auto">
-          <div className="px-2 py-1 bg-[#18181b] border border-white/10 text-cyan-400 text-[11px] font-semibold">
-            DB: {spec.targetDatabase}
+        {/* Primitive Badges & Mini 14-Day Progress */}
+        <div className="flex flex-col items-start md:items-end gap-2 self-start md:self-auto">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <div className="px-2 py-1 bg-[#18181b] border border-white/10 text-cyan-400 text-[11px] font-semibold">
+              DB: {spec.targetDatabase}
+            </div>
+            <div className="px-2 py-1 bg-[#18181b] border border-white/10 text-emerald-400 text-[11px] font-semibold">
+              AUTH: {spec.authProvider}
+            </div>
+            <div className="px-2 py-1 bg-[#18181b] border border-white/10 text-amber-400 text-[11px] font-semibold">
+              DEPLOY: {spec.deploymentTarget}
+            </div>
           </div>
-          <div className="px-2 py-1 bg-[#18181b] border border-white/10 text-emerald-400 text-[11px] font-semibold">
-            AUTH: {spec.authProvider}
-          </div>
-          <div className="px-2 py-1 bg-[#18181b] border border-white/10 text-amber-400 text-[11px] font-semibold">
-            DEPLOY: {spec.deploymentTarget}
+
+          {/* Live 14-Day Launch Checklist Progress Bar */}
+          <div className="w-full md:w-56 flex items-center space-x-2">
+            <span className="text-[10px] text-zinc-400 whitespace-nowrap">
+              14-DAY PLAN: <strong className="text-cyan-400 tabular-nums">{progressPercent}%</strong>
+            </span>
+            <div className="flex-1 h-1.5 bg-[#18181b] border border-zinc-800 overflow-hidden">
+              <div
+                ref={roadmapFillRef}
+                className="h-full bg-gradient-to-r from-cyan-400 to-emerald-400"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -250,8 +331,11 @@ ${d.deliverables.map((del) => `- [${d.completed ? 'x' : ' '}] ${del}`).join('\n'
         </button>
       </div>
 
-      {/* Modular Tab Content Panes */}
-      <div className="p-4 sm:p-6 bg-[#09090b]/40 min-h-[460px]">
+      {/* Modular Tab Content Panes with GSAP Morphing & Staggered Reveal */}
+      <div
+        ref={tabContentRef}
+        className="p-4 sm:p-6 bg-[#09090b]/40 min-h-[460px]"
+      >
         {activeTab === 'topology' && <ArchitectureTab spec={spec} />}
         {activeTab === 'database' && <DatabaseTab spec={spec} />}
         {activeTab === 'api' && <ApiContractTab spec={spec} />}

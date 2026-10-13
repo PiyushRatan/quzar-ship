@@ -1,7 +1,7 @@
-﻿# Quzar Ship (Qjarship)
+﻿# Quzar Ship
 
 > **AI-Powered MVP Architecture & Product Specification Engine**
-> Solo-engineered by **Piyush Ratan** ([piyushratan.in](https://piyushratan.in) · [Quzar](https://quzar-io.web.app))
+> Built by **Piyush Ratan** ([piyushratan.in](https://piyushratan.in) · [Quzar](https://quzar-io.web.app))
 
 ## Overview
 Quzar Ship is a developer-centric specification platform. Enter a startup concept or competitor URL to generate production-ready system architecture, Prisma database schemas, REST API contracts, UI wireframe blueprints, and 14-day sprint roadmaps.

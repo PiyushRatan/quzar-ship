@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "QUZAR SHIP // High-Cognitive Architecture Engine",
+  title: "Quzar Ship — Product Architecture & Specification Engine",
   description:
-    "Autonomous specification compiler adhering strictly to PiyushRatan Directives 2.0. Generate production-grade topology, Prisma schemas, API contracts, and 14-day execution sprint roadmaps.",
+    "Turn product concepts and competitor URLs into production-ready system topologies, Prisma database schemas, API contracts, and 14-day sprint roadmaps.",
 };
 
 export default function RootLayout({

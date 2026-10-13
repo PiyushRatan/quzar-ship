@@ -98,7 +98,7 @@ export function ApiContractTab({ spec }: ApiContractTabProps) {
                 </span>
               </div>
               <div className="text-[11px] text-cyan-400 font-mono mt-1">
-                {guard.directive}
+                {guard.policy || guard.directive}
               </div>
               <p className="text-xs text-zinc-400 mt-2 font-sans leading-relaxed">
                 {guard.enforcement}

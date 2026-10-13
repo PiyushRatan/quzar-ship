@@ -1,4 +1,4 @@
-import { IntakePreset, ArchitectureSpec } from '../types/spec';
+﻿import { IntakePreset, ArchitectureSpec } from '../types/spec';
 
 export const PRESETS: IntakePreset[] = [
   {
@@ -31,7 +31,7 @@ export const PRESETS: IntakePreset[] = [
             label: 'EDGE INGRESS ROUTER',
             role: 'Global Anycast DNS & WAF',
             tier: 'Level 0 Void / Edge',
-            protocol: 'HTTP/3 · TLS 1.3',
+            protocol: 'HTTP/3 Â· TLS 1.3',
           },
           {
             id: 'edge-runtime',
@@ -105,7 +105,7 @@ export const PRESETS: IntakePreset[] = [
         description:
           'Fully normalized multi-tenant PostgreSQL schema with pgvector extensions, row-level tenant security, and audit journals.',
         code: `// QUZAR SHIP ARCHITECTURAL SPECIFICATION
-// DIRECTIVE 2.0 COMPLIANT PRISMA SCHEMA
+// COMPLIANT PRISMA SCHEMA
 
 datasource db {
   provider   = "postgresql"
@@ -250,7 +250,7 @@ model DocumentChunk {
             method: 'POST',
             path: '/api/v1/agents/:agentId/stream',
             summary: 'Initiate streaming agent inference with token backpressure',
-            auth: 'Bearer JWT · Organization Scoped',
+            auth: 'Bearer JWT Â· Organization Scoped',
             idempotency: true,
             rateLimit: '120 req/min per workspace',
           },
@@ -258,7 +258,7 @@ model DocumentChunk {
             method: 'POST',
             path: '/api/v1/vectors/upsert',
             summary: 'Batch embed & upsert vector chunks with cosine indexing',
-            auth: 'Bearer JWT · Admin Scoped',
+            auth: 'Bearer JWT Â· Admin Scoped',
             idempotency: true,
             rateLimit: '60 req/min per workspace',
           },
@@ -266,7 +266,7 @@ model DocumentChunk {
             method: 'GET',
             path: '/api/v1/telemetry/executions',
             summary: 'Retrieve tabular latency & token consumption metrics',
-            auth: 'Bearer JWT · Operator Scoped',
+            auth: 'Bearer JWT Â· Operator Scoped',
             idempotency: false,
             rateLimit: '300 req/min',
           },
@@ -274,7 +274,7 @@ model DocumentChunk {
             method: 'POST',
             path: '/api/v1/workspaces/quotas',
             summary: 'Atomic token quota top-up with idempotency key locking',
-            auth: 'Bearer JWT · Owner Only',
+            auth: 'Bearer JWT Â· Owner Only',
             idempotency: true,
             rateLimit: '10 req/min',
           },
@@ -282,25 +282,25 @@ model DocumentChunk {
         securityGuards: [
           {
             title: 'Tenant Data Isolation (Directives 12 & 32)',
-            directive: 'Directive 12 · Strict Workspace Sharding',
+            policy: 'Â· Strict Workspace Sharding',
             enforcement: 'Mandatory workspace_id filter on all SQL clauses; row-level tenancy guards at middleware.',
             status: 'ENFORCED',
           },
           {
             title: 'CWE-200 Credential Leakage Shield',
-            directive: 'Directive 03 §3.3 · Zero Key Reflection',
+            policy: 'Â§3.3 Â· Zero Key Reflection',
             enforcement: 'Zod transforms omit hashed passwords, session secrets, and LLM API credentials from response payloads.',
             status: 'ENFORCED',
           },
           {
             title: 'Distributed Idempotency Locking',
-            directive: 'Directive 31 · Financial & Mutation Ledger',
+            policy: 'Â· Financial & Mutation Ledger',
             enforcement: 'X-Idempotency-Key header verified against Redis before dispatching inference or billing events.',
             status: 'ENFORCED',
           },
           {
             title: 'Constant-Time Session Verification',
-            directive: 'Directive 14 · Secure Edge Ingress',
+            policy: 'Â· Secure Edge Ingress',
             enforcement: 'Timing-safe equality comparisons for auth tokens and HMAC signatures.',
             status: 'AUDITED',
           },
@@ -314,17 +314,17 @@ model DocumentChunk {
               {
                 name: 'TactileButton',
                 role: 'Width-locked, unbracketed uppercase monospace trigger with active mechanical press',
-                directive: 'Directive 20 §4',
+                policy: 'Â§4',
               },
               {
                 name: 'StatusIndicator',
                 role: '1:1 aspect-ratio circular dot with pulsing telemetry halo',
-                directive: 'Directive 01 §1.1',
+                policy: 'Â§1.1',
               },
               {
                 name: 'DataField',
                 role: 'Monospace tabular figure display with 4.35:1 AA contrast kicker',
-                directive: 'Directive 02 §2.2',
+                policy: 'Â§2.2',
               },
             ],
           },
@@ -334,17 +334,17 @@ model DocumentChunk {
               {
                 name: 'StreamingTerminal',
                 role: 'Real-time SSE token stream renderer with line numbers and copy buffer',
-                directive: 'Directive 04 §4.2',
+                policy: 'Â§4.2',
               },
               {
                 name: 'FilterToolbar',
                 role: 'Zero-pill segmented control with directional key-lighting borders',
-                directive: 'Directive 01 §1.1',
+                policy: 'Â§1.1',
               },
               {
                 name: 'QuotaGauge',
                 role: 'Tabular consumption progress meter with amber telemetry warning',
-                directive: 'Directive 04 §4.1',
+                policy: 'Â§4.1',
               },
             ],
           },
@@ -354,12 +354,12 @@ model DocumentChunk {
               {
                 name: 'TelemetryNavbar',
                 role: 'Header shell with live engine status, latency metrics, and external anchors',
-                directive: 'Directive 02 §2.1',
+                policy: 'Â§2.1',
               },
               {
                 name: 'ModalWorkbench',
                 role: 'Scroll-locked dialog with stable scrollbar gutters and zero CLS',
-                directive: 'Directive 29 §1',
+                policy: 'Â§1',
               },
             ],
           },
@@ -374,7 +374,7 @@ model DocumentChunk {
         ],
         accessibilityGuards: [
           { guard: 'Typographic Contrast', level: 'WCAG 2.2 AAA', spec: 'Pure white (#fff) on headlines (21:1); Zinc-100 on body (19.1:1)' },
-          { guard: 'Non-Pill Geometries', level: 'Directive 01', spec: 'All interactive elements sharp (rounded-none) or micro-chamfer (rounded-xs)' },
+          { guard: 'Non-Pill Geometries', level: '', spec: 'All interactive elements sharp (rounded-none) or micro-chamfer (rounded-xs)' },
           { guard: 'Keyboard Focus Rims', level: 'WCAG 2.2 AA', spec: '2px solid white/80 with 2px black offset on all interactive primitives' },
         ],
       },
@@ -624,7 +624,7 @@ model DocumentChunk {
         relationsCount: 9,
         description: 'Enterprise workflow execution schema with audit journals and step transitions.',
         code: `// QUZAR SHIP ARCHITECTURAL SPECIFICATION
-// DIRECTIVE 2.0 COMPLIANT B2B WORKFLOW SCHEMA
+// COMPLIANT B2B WORKFLOW SCHEMA
 
 datasource db {
   provider = "postgresql"
@@ -743,7 +743,7 @@ model AuditLog {
             method: 'POST',
             path: '/api/v1/runs/:runId/rollback',
             summary: 'Initiate compensation rollback for failed transaction steps',
-            auth: 'Bearer JWT · Admin Scoped',
+            auth: 'Bearer JWT Â· Admin Scoped',
             idempotency: true,
             rateLimit: '20 req/min',
           },
@@ -751,13 +751,13 @@ model AuditLog {
         securityGuards: [
           {
             title: 'HMAC Webhook Ingress Verification',
-            directive: 'Directive 14 · Zero Unverified Ingress',
+            policy: 'Â· Zero Unverified Ingress',
             enforcement: 'Compute SHA256 timing-safe hash before deserializing incoming payload bodies.',
             status: 'ENFORCED',
           },
           {
             title: 'Cryptographic Hash-Chained Audit Ledger',
-            directive: 'Directive 31 · Dual-Verification Ledger',
+            policy: 'Â· Dual-Verification Ledger',
             enforcement: 'Audit rows linked by SHA-256 current_hash = hash(prev_hash + payload + timestamp).',
             status: 'ENFORCED',
           },
@@ -768,8 +768,8 @@ model AuditLog {
           {
             category: 'Visual Flow Canvas',
             components: [
-              { name: 'WorkflowGraph', role: 'Interactive SVG node-and-wire topology inspector', directive: 'Directive 04 §4.2' },
-              { name: 'StepInspector', role: 'Side-drawer displaying step inputs, outputs, and errors', directive: 'Directive 29 §1' },
+              { name: 'WorkflowGraph', role: 'Interactive SVG node-and-wire topology inspector', policy: 'Â§4.2' },
+              { name: 'StepInspector', role: 'Side-drawer displaying step inputs, outputs, and errors', policy: 'Â§1' },
             ],
           },
         ],
@@ -864,7 +864,7 @@ model AuditLog {
         services: [
           { name: 'Edge Catalog Cache', type: 'Static/Dynamic Cache', tech: 'Cloudflare Workers KV + Stale-While-Revalidate', description: 'Serves product feeds in <20ms globally.' },
           { name: 'Inventory Lock Engine', type: 'Concurrency Guard', tech: 'Redis Distributed Locks (Redlock)', description: 'Prevents overselling during flash checkout spikes.' },
-          { name: 'Dual Verification Payment Hook', type: 'Payment Ledger', tech: 'Stripe Webhook + Idempotent Database Insert', description: 'Directive 31 compliant integer arithmetic.' },
+          { name: 'Dual Verification Payment Hook', type: 'Payment Ledger', tech: 'Stripe Webhook + Idempotent Database Insert', description: 'compliant integer arithmetic.' },
         ],
         telemetry: {
           ingressLatency: '9.2ms (p95)',
@@ -878,7 +878,7 @@ model AuditLog {
         relationsCount: 8,
         description: 'Transactional commerce schema with integer cents, atomic inventory decrement, and orders.',
         code: `// QUZAR SHIP ARCHITECTURAL SPECIFICATION
-// DIRECTIVE 2.0 & 31 COMPLIANT COMMERCE SCHEMA
+// & 31 COMPLIANT COMMERCE SCHEMA
 
 datasource db {
   provider = "postgresql"
@@ -901,7 +901,7 @@ model Product {
   id          String         @id @default(cuid())
   slug        String         @unique
   title       String
-  priceCents  Int            @map("price_cents") // Directive 31: Integer currency only
+  priceCents  Int            @map("price_cents") // : Integer currency only
   inventory   Int            @default(0)
   createdAt   DateTime       @default(now()) @map("created_at")
   variants    ProductVariant[]
@@ -961,15 +961,15 @@ model OrderItem {
           { method: 'POST', path: '/api/v1/checkout/confirm', summary: 'Verify payment ledger and finalize order creation', auth: 'Bearer Token', idempotency: true, rateLimit: '20 req/min' },
         ],
         securityGuards: [
-          { title: 'Integer Currency Arithmetic', directive: 'Directive 31 · Dual-Verification Ledger', enforcement: 'Never use float/double; priceCents in strict integer units.', status: 'ENFORCED' },
-          { title: 'Inventory Race-Condition Guard', directive: 'Directive 12 · Concurrency Guard', enforcement: 'Conditional SQL UPDATE WHERE stock >= quantity RETURNING stock.', status: 'ENFORCED' },
+          { title: 'Integer Currency Arithmetic', policy: 'Â· Dual-Verification Ledger', enforcement: 'Never use float/double; priceCents in strict integer units.', status: 'ENFORCED' },
+          { title: 'Inventory Race-Condition Guard', policy: 'Â· Concurrency Guard', enforcement: 'Conditional SQL UPDATE WHERE stock >= quantity RETURNING stock.', status: 'ENFORCED' },
         ],
       },
       uiBlueprint: {
         componentTree: [
           { category: 'Commerce Atoms', components: [
-            { name: 'PriceTag', role: 'Monospace tabular currency formatter ($XX.XX)', directive: 'Directive 02 §2.2' },
-            { name: 'StockBadge', role: 'Micro-chamfered inventory availability counter', directive: 'Directive 01 §1.1' },
+            { name: 'PriceTag', role: 'Monospace tabular currency formatter ($XX.XX)', policy: 'Â§2.2' },
+            { name: 'StockBadge', role: 'Micro-chamfered inventory availability counter', policy: 'Â§1.1' },
           ] },
         ],
         designTokens: [
@@ -1066,7 +1066,7 @@ model OrderItem {
         relationsCount: 5,
         description: 'Local SQLite schema for offline project states and file hashes.',
         code: `// QUZAR SHIP ARCHITECTURAL SPECIFICATION
-// DIRECTIVE 2.0 COMPLIANT SQLITE LOCAL CLI SCHEMA
+// COMPLIANT SQLITE LOCAL CLI SCHEMA
 
 datasource db {
   provider = "sqlite"
@@ -1121,14 +1121,14 @@ model BuildLog {
           { method: 'GET', path: 'unix:///var/run/quzar.sock/status', summary: 'Query daemon health, memory, and watch status', auth: 'Local IPC UID Check', idempotency: false, rateLimit: 'Unlimited (Local)' },
         ],
         securityGuards: [
-          { title: 'Local IPC Permissions Guard', directive: 'Directive 14 · Local Security', enforcement: 'Socket permissions locked strictly to 0600 (owner read/write only).', status: 'ENFORCED' },
+          { title: 'Local IPC Permissions Guard', policy: 'Â· Local Security', enforcement: 'Socket permissions locked strictly to 0600 (owner read/write only).', status: 'ENFORCED' },
         ],
       },
       uiBlueprint: {
         componentTree: [
           { category: 'Terminal TUI Primitives', components: [
-            { name: 'AsciiHeader', role: 'Directives 2.0 unbracketed monospace banner', directive: 'Directive 20' },
-            { name: 'DeltaTable', role: 'Modified files listing with colored status flags', directive: 'Directive 04' },
+            { name: 'AsciiHeader', role: 'Directives 2.0 unbracketed monospace banner', policy: '' },
+            { name: 'DeltaTable', role: 'Modified files listing with colored status flags', policy: '' },
           ] },
         ],
         designTokens: [

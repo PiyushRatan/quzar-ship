@@ -2,20 +2,42 @@
 
 import React, { useState } from 'react';
 import { Header } from '../components/Header';
-import { TelemetryBar } from '../components/TelemetryBar';
 import { IntakeWizard } from '../components/IntakeWizard';
 import { SpecViewer } from '../components/SpecViewer';
 import { PRESETS } from '../data/presets';
-import { ArchitectureSpec, DatabaseOption, AuthOption, DeploymentOption } from '../types/spec';
+import {
+  ArchitectureSpec,
+  DatabaseOption,
+  AuthOption,
+  DeploymentOption,
+} from '../types/spec';
 import {
   Layers,
   Compass,
+  ArrowRight,
+  Database,
+  Globe,
+  ShieldCheck,
+  Calendar,
+  FileCode,
+  Sparkles,
+  CheckCircle2,
+  ExternalLink,
 } from 'lucide-react';
 
 export default function Home() {
   const [selectedPresetId, setSelectedPresetId] = useState<string>('ai-saas');
-  const [activeSpec, setActiveSpec] = useState<ArchitectureSpec>(PRESETS[0].sampleSpec);
+  const [activeSpec, setActiveSpec] = useState<ArchitectureSpec>(
+    PRESETS[0].sampleSpec
+  );
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
+
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   // Switch preset instantly
   const handleSelectPreset = (presetId: string) => {
@@ -26,19 +48,21 @@ export default function Home() {
     }
   };
 
-  // Custom spec compilation handler: queries /api/generate with deterministic fallback
+  // Custom spec compilation handler
   const handleGenerateCustomSpec = async (values: {
     conceptName: string;
     problemStatement: string;
+    targetAudience: string;
     referenceUrl?: string;
     targetDatabase: DatabaseOption;
     authProvider: AuthOption;
     deploymentTarget: DeploymentOption;
+    selectedModules: string[];
+    scaleTarget: string;
   }) => {
     setIsGenerating(true);
 
     try {
-      // Map auth and deploy targets to backend enum
       const authMapped =
         values.authProvider === 'Supabase Auth'
           ? 'Supabase'
@@ -60,8 +84,9 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           projectName: values.conceptName,
-          concept: values.problemStatement,
-          targetAudience: 'Global Operators & Engineering Teams',
+          concept: `${values.problemStatement} [Enabled Modules: ${values.selectedModules.join(', ')}] [Scale Target: ${values.scaleTarget}]`,
+          targetAudience:
+            values.targetAudience || 'Global Operators & Engineering Teams',
           competitorUrl: values.referenceUrl || undefined,
           databaseType: values.targetDatabase,
           authType: authMapped,
@@ -83,68 +108,92 @@ export default function Home() {
             deploymentTarget: values.deploymentTarget,
             generatedAt: raw.generatedAt || new Date().toISOString(),
             topology: {
-              summary: raw.architecture?.topologySummary || 'High-performance distributed system topology',
+              summary:
+                raw.architecture?.topologySummary ||
+                'High-performance distributed system topology',
               diagramNodes: [
                 {
                   id: 'edge',
                   label: 'EDGE GATEWAY',
-                  role: raw.architecture?.components?.edge?.responsibility || 'Ingress WAF & Routing',
-                  tier: 'Level 0 Edge',
+                  role:
+                    raw.architecture?.components?.edge?.responsibility ||
+                    'Ingress WAF & Routing',
+                  tier: 'Edge Network',
                   protocol: 'HTTP/3',
                 },
                 {
                   id: 'frontend',
                   label: 'CLIENT FRONTEND',
-                  role: raw.architecture?.components?.frontend?.responsibility || 'UI & Client State',
-                  tier: 'Level 1 UI',
+                  role:
+                    raw.architecture?.components?.frontend?.responsibility ||
+                    'UI & Client State',
+                  tier: 'Application UI',
                   protocol: 'HTTPS',
                 },
                 {
                   id: 'backend',
                   label: 'CORE BACKEND',
-                  role: raw.architecture?.components?.backend?.responsibility || 'Business Logic Engine',
-                  tier: 'Level 2 Runtime',
+                  role:
+                    raw.architecture?.components?.backend?.responsibility ||
+                    'Business Logic Engine',
+                  tier: 'API Runtime',
                   protocol: 'REST / RPC',
                 },
                 {
                   id: 'queue',
                   label: 'MESSAGE QUEUE',
-                  role: raw.architecture?.components?.queue?.responsibility || 'Async Job Worker',
-                  tier: 'Level 2 Broker',
-                  protocol: 'AMQP / Redis',
+                  role:
+                    raw.architecture?.components?.queue?.responsibility ||
+                    'Async Job Worker',
+                  tier: 'Worker Broker',
+                  protocol: 'Redis / AMQP',
                 },
                 {
                   id: 'db',
                   label: 'PRIMARY DATABASE',
-                  role: raw.architecture?.components?.cache?.responsibility || 'Relational Persistence',
-                  tier: 'Level 3 ACID Store',
-                  protocol: 'Wire Protocol',
+                  role:
+                    raw.architecture?.components?.cache?.responsibility ||
+                    'Relational Persistence',
+                  tier: 'Primary Store',
+                  protocol: 'TCP / TLS',
                 },
               ],
               services: [
                 {
                   name: 'Core Application Service',
                   type: 'Ingress Controller',
-                  tech: raw.architecture?.techStack?.framework?.name || 'Next.js 16 (Turbopack)',
-                  description: raw.architecture?.techStack?.framework?.rationale || 'High-throughput edge runtime',
+                  tech:
+                    raw.architecture?.techStack?.framework?.name ||
+                    'Next.js App Router',
+                  description:
+                    raw.architecture?.techStack?.framework?.rationale ||
+                    'High-throughput server and edge runtime',
                 },
                 {
                   name: 'Database Persistence Gateway',
                   type: 'Database Engine',
-                  tech: raw.architecture?.techStack?.database?.name || values.targetDatabase,
-                  description: raw.architecture?.techStack?.database?.rationale || 'Transactional data store',
+                  tech:
+                    raw.architecture?.techStack?.database?.name ||
+                    values.targetDatabase,
+                  description:
+                    raw.architecture?.techStack?.database?.rationale ||
+                    'Transactional data store with automated indexing',
                 },
                 {
                   name: 'Identity & Access Perimeter',
                   type: 'Security Perimeter',
-                  tech: raw.architecture?.techStack?.auth?.name || values.authProvider,
-                  description: raw.architecture?.techStack?.auth?.rationale || 'Cryptographic session validation',
+                  tech:
+                    raw.architecture?.techStack?.auth?.name ||
+                    values.authProvider,
+                  description:
+                    raw.architecture?.techStack?.auth?.rationale ||
+                    'Session validation and role-based access control',
                 },
               ],
               telemetry: {
-                ingressLatency: '16.4ms (p95)',
-                dbQueryLatency: '4.2ms (p95)',
-                edgeColdStart: '24ms (cold)',
+                ingressLatency: '18ms (p95)',
+                dbQueryLatency: '4.5ms (p95)',
+                edgeColdStart: '25ms',
               },
             },
             databaseSchema: {
@@ -152,7 +201,9 @@ export default function Home() {
               tablesCount: raw.database?.entities?.length || 6,
               relationsCount: 8,
               description: `${values.targetDatabase} relational schema generated for ${values.conceptName}`,
-              code: raw.database?.prismaSchemaCode || `// DIRECTIVE 2.0 PRISMA SCHEMA\ndatasource db {\n  provider = "${values.targetDatabase.toLowerCase()}"\n  url = env("DATABASE_URL")\n}`,
+              code:
+                raw.database?.prismaSchemaCode ||
+                `// Production Prisma Schema\ndatasource db {\n  provider = "${values.targetDatabase.toLowerCase()}"\n  url = env("DATABASE_URL")\n}`,
             },
             apiContracts: {
               endpoints: (raw.apiContract?.endpoints || []).map((ep: any) => ({
@@ -165,21 +216,24 @@ export default function Home() {
               })),
               securityGuards: [
                 {
-                  title: 'Tenant Sharding Isolation',
-                  directive: 'Directive 12 · Strict Tenancy',
-                  enforcement: 'Mandatory tenant isolation on all queries.',
+                  title: 'Multi-Tenant Data Isolation',
+                  policy: 'Strict Workspace Partitioning',
+                  enforcement:
+                    'Mandatory tenant scoping enforced on all database reads and writes.',
                   status: 'ENFORCED',
                 },
                 {
-                  title: 'CWE-200 Credential Masking',
-                  directive: 'Directive 03 §3.3 · Zero Key Reflection',
-                  enforcement: 'Sensitive tokens and passwords scrubbed from outputs.',
+                  title: 'Zero Secret Reflection',
+                  policy: 'Credential Scrubbing',
+                  enforcement:
+                    'API keys, hashes, and internal tokens are stripped at serializer boundaries.',
                   status: 'ENFORCED',
                 },
                 {
-                  title: 'Dual-Verification Financial Ledger',
-                  directive: 'Directive 31 · Ledger Verification',
-                  enforcement: 'Integer currency arithmetic and idempotency keys.',
+                  title: 'Idempotent Mutation Ledger',
+                  policy: 'Atomic State Transitions',
+                  enforcement:
+                    'State-mutating POST/PUT endpoints enforce idempotency keys.',
                   status: 'ENFORCED',
                 },
               ],
@@ -187,33 +241,64 @@ export default function Home() {
             uiBlueprint: {
               componentTree: [
                 {
-                  category: 'Atoms & Triggers',
+                  category: 'Core Primitives',
                   components: [
-                    { name: 'TactileButton', role: 'Monospace width-locked trigger', directive: 'Directive 20 §4' },
-                    { name: 'StatusIndicator', role: '1:1 circular dot indicator', directive: 'Directive 01 §1.1' },
+                    {
+                      name: 'ActionTrigger',
+                      role: 'Primary interactive button control',
+                      spec: 'Width-Locked Control',
+                    },
+                    {
+                      name: 'StatusBadge',
+                      role: 'Live state and health indicator',
+                      spec: 'High-Contrast Semantic',
+                    },
                   ],
                 },
                 {
-                  category: 'Panels & Viewports',
+                  category: 'Application Views',
                   components: [
-                    { name: 'SpecWorkbench', role: 'High cognitive density viewport', directive: 'Directive 04 §4.2' },
+                    {
+                      name: 'WorkspaceShell',
+                      role: 'Multi-pane navigation and data viewport',
+                      spec: 'Responsive Grid',
+                    },
                   ],
                 },
               ],
               designTokens: [
-                { token: '--surface-0', value: '#000000', rule: 'Infinite display void' },
-                { token: '--surface-1', value: '#09090b', rule: 'Persistent canvas' },
-                { token: '--surface-2', value: '#121214', rule: 'Surface bento card' },
-                { token: '--surface-3', value: '#18181b', rule: 'Elevated hover surface' },
-                { token: '--surface-4', value: '#27272a', rule: 'Active tab state' },
+                {
+                  token: '--surface-0',
+                  value: '#000000',
+                  rule: 'Root canvas background',
+                },
+                {
+                  token: '--surface-1',
+                  value: '#09090b',
+                  rule: 'Primary navigation and sidebar surface',
+                },
+                {
+                  token: '--surface-2',
+                  value: '#121214',
+                  rule: 'Card and module container',
+                },
+                {
+                  token: '--surface-3',
+                  value: '#18181b',
+                  rule: 'Interactive hover and active state',
+                },
               ],
               accessibilityGuards: [
-                { guard: 'WCAG AAA Optical Contrast', level: 'WCAG 2.2 AAA', spec: '21:1 contrast on headlines; 19:1 on primary body' },
+                {
+                  guard: 'High Optical Contrast',
+                  level: 'WCAG 2.2 AAA',
+                  spec: '21:1 contrast on primary headings; keyboard navigable focus rings',
+                },
               ],
             },
             sprintRoadmap: {
               totalDays: 14,
-              velocityRatio: '100% Deterministic Delivery',
+              velocityRatio: '14-Day Production Delivery',
               days: (raw.sprintRoadmap?.days || []).map((d: any) => ({
                 day: d.dayNumber,
                 phase:
@@ -246,29 +331,45 @@ export default function Home() {
                   monthlyTotal: '$240.00 / mo',
                   margin: '88% Gross Margin',
                   breakdown: [
-                    { resource: 'Edge Compute Fleet', provider: 'Vercel / Cloudflare', cost: '$60.00' },
-                    { resource: 'Managed High-Availability Database', provider: values.targetDatabase, cost: '$120.00' },
-                    { resource: 'Distributed Redis Queue', provider: 'Upstash / Redis Labs', cost: '$60.00' },
+                    {
+                      resource: 'Compute Fleet',
+                      provider: values.deploymentTarget,
+                      cost: '$60.00',
+                    },
+                    {
+                      resource: 'Managed High-Availability Database',
+                      provider: values.targetDatabase,
+                      cost: '$120.00',
+                    },
+                    {
+                      resource: 'Distributed Cache & Queue',
+                      provider: 'Redis Cloud',
+                      cost: '$60.00',
+                    },
                   ],
                 },
               ],
-              projectedSavings: '72% infrastructure cost reduction through edge prompt caching',
-              cachingImpact: 'Eliminates repetitive LLM inferences and database connection overhead',
+              projectedSavings:
+                '70% infrastructure cost reduction through edge caching and connection pooling',
+              cachingImpact:
+                'Minimizes redundant compute cycles and database read amplification',
             },
           };
 
           setActiveSpec(mappedSpec);
           setIsGenerating(false);
+          scrollTo('preview');
           return;
         }
       }
     } catch (err) {
-      console.warn('API call fallback to deterministic synthesis', err);
+      console.warn('API call fallback to local synthesis', err);
     }
 
-    // High-performance fallback synthesis
+    // Fallback synthesis
     setTimeout(() => {
-      const basePreset = PRESETS.find((p) => p.id === selectedPresetId) || PRESETS[0];
+      const basePreset =
+        PRESETS.find((p) => p.id === selectedPresetId) || PRESETS[0];
       const customSpec: ArchitectureSpec = {
         ...basePreset.sampleSpec,
         id: `spec-${Date.now().toString().slice(-6)}`,
@@ -281,57 +382,181 @@ export default function Home() {
         generatedAt: new Date().toISOString(),
         topology: {
           ...basePreset.sampleSpec.topology,
-          summary: `Custom ${values.deploymentTarget} architecture with ${values.targetDatabase} persistence and ${values.authProvider} security perimeter.`,
+          summary: `Custom ${values.deploymentTarget} architecture with ${values.targetDatabase} persistence and ${values.authProvider} authentication.`,
         },
       };
 
       setActiveSpec(customSpec);
       setIsGenerating(false);
+      scrollTo('preview');
     }, 400);
   };
 
   return (
     <div className="min-h-screen bg-black text-zinc-100 flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-200">
-      {/* 1. Global Navigation Shell */}
+      {/* Navigation Header */}
       <Header />
 
-      {/* 2. Real-Time Telemetry Bar */}
-      <TelemetryBar />
+      {/* Main Content */}
+      <main className="flex-1">
+        {/* 1. HERO SECTION */}
+        <section className="relative border-b border-white/10 bg-[#050507] overflow-hidden py-16 sm:py-24">
+          <div className="absolute inset-0 bg-grid-architectural opacity-40 pointer-events-none"></div>
 
-      {/* Main Workspace Body */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        {/* Hero Section */}
-        <div className="relative border-t border-t-white/16 border-x border-x-white/10 border-b border-b-white/4 bg-[#09090b] p-6 sm:p-8 overflow-hidden">
-          {/* 20px Architectural Grid Underlay */}
-          <div className="absolute inset-0 bg-grid-architectural opacity-50 pointer-events-none"></div>
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 bg-[#121214] border border-white/10 text-cyan-400 text-xs font-mono uppercase tracking-widest mb-6">
+                <span>Product Architecture & Specification Platform</span>
+              </div>
 
-          <div className="relative z-10 max-w-3xl">
-            <div className="flex items-center space-x-2">
-              <span className="kicker-cyan">DIRECTIVES 2.0 PROTOCOL ENGINE</span>
-              <span className="text-zinc-600">//</span>
-              <span className="font-mono text-xs text-zinc-400 uppercase tracking-widest">
-                ZERO-SLOP ARCHITECTURE
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08] font-mono">
+                Turn Product Concepts into Production Architecture.
+              </h1>
+
+              <p className="text-base sm:text-lg text-zinc-400 mt-5 leading-relaxed max-w-2xl">
+                Transform raw startup ideas or competitor URLs into complete system topologies,
+                production-ready Prisma database schemas, REST API contracts, and 14-day execution
+                roadmaps in seconds.
+              </p>
+
+              {/* Hero CTAs */}
+              <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => scrollTo('studio')}
+                  className="inline-flex items-center justify-center space-x-3 px-7 py-4 bg-white text-black hover:bg-cyan-400 font-mono text-xs sm:text-sm font-bold uppercase tracking-widest transition-colors cursor-pointer"
+                >
+                  <span>USE TOOL — LAUNCH ARCHITECT</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => scrollTo('preview')}
+                  className="inline-flex items-center justify-center space-x-2 px-6 py-4 bg-[#121214] text-zinc-200 hover:text-white border border-white/15 hover:border-white/40 font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors cursor-pointer"
+                >
+                  <Compass className="w-4 h-4 text-cyan-400" />
+                  <span>EXPLORE SAMPLE SPECS</span>
+                </button>
+              </div>
+
+              {/* Trust / Capability Strip */}
+              <div className="mt-12 pt-8 border-t border-zinc-800/80 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono">
+                <div>
+                  <div className="text-white font-bold">SCHEMA.PRISMA</div>
+                  <div className="text-zinc-500 text-[11px] mt-0.5">
+                    Normalized & Indexed
+                  </div>
+                </div>
+                <div>
+                  <div className="text-white font-bold">API CONTRACTS</div>
+                  <div className="text-zinc-500 text-[11px] mt-0.5">
+                    REST, RPC & Auth Guards
+                  </div>
+                </div>
+                <div>
+                  <div className="text-white font-bold">WEB CRAWLER</div>
+                  <div className="text-zinc-500 text-[11px] mt-0.5">
+                    Competitor Tech Extraction
+                  </div>
+                </div>
+                <div>
+                  <div className="text-white font-bold">14-DAY ROADMAP</div>
+                  <div className="text-zinc-500 text-[11px] mt-0.5">
+                    Daily Engineering Tasks
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 2. CORE FEATURES SECTION */}
+        <section id="features" className="py-16 border-b border-white/10 bg-black">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-10">
+              <span className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-semibold">
+                CORE CAPABILITIES
               </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white font-mono mt-1">
+                Everything Needed to Ship Production Software
+              </h2>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white mt-3 leading-tight font-mono">
-              TURN RAW CONCEPTS INTO PRODUCTION ARCHITECTURE IN SECONDS
-            </h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div className="bg-[#0e0e11] border border-white/10 p-6">
+                <Globe className="w-6 h-6 text-cyan-400 mb-4" />
+                <h3 className="text-sm font-bold text-white font-mono uppercase tracking-wider">
+                  Competitor URL Analysis
+                </h3>
+                <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
+                  Supply any reference or competitor website. Our multi-page crawler extracts tech stack signals, navigation flows, and feature gaps automatically.
+                </p>
+              </div>
 
-            <p className="text-sm sm:text-base text-zinc-400 mt-3 leading-relaxed font-sans">
-              Autonomous architectural compiler adhering strictly to PiyushRatan Directives 2.0.
-              Instantly synthesizes high-density system topologies, normalized Prisma schemas,
-              idempotent API contracts, and interactive 14-day execution roadmaps.
-            </p>
+              <div className="bg-[#0e0e11] border border-white/10 p-6">
+                <Database className="w-6 h-6 text-emerald-400 mb-4" />
+                <h3 className="text-sm font-bold text-white font-mono uppercase tracking-wider">
+                  Database Schema Compiler
+                </h3>
+                <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
+                  Generates syntactically valid Prisma schemas complete with relations, foreign key cascades, and indexes tailored to PostgreSQL, MySQL, MongoDB, or Firestore.
+                </p>
+              </div>
 
-            {/* Quick Demo Switcher Strip */}
-            <div className="mt-6 pt-5 border-t border-zinc-800 flex flex-col sm:flex-row sm:items-center gap-3">
-              <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider flex items-center space-x-1.5 whitespace-nowrap">
-                <Compass className="w-3.5 h-3.5 text-cyan-400" />
-                <span>LOAD ARCHITECTURE DEMO:</span>
-              </span>
+              <div className="bg-[#0e0e11] border border-white/10 p-6">
+                <ShieldCheck className="w-6 h-6 text-amber-400 mb-4" />
+                <h3 className="text-sm font-bold text-white font-mono uppercase tracking-wider">
+                  API & Security Contracts
+                </h3>
+                <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
+                  Defines structured REST and streaming routes with authentication policies, rate limits, idempotency keys, and multi-tenant isolation rules.
+                </p>
+              </div>
 
-              <div className="flex flex-wrap gap-2">
+              <div className="bg-[#0e0e11] border border-white/10 p-6">
+                <Calendar className="w-6 h-6 text-purple-400 mb-4" />
+                <h3 className="text-sm font-bold text-white font-mono uppercase tracking-wider">
+                  14-Day Execution Plan
+                </h3>
+                <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
+                  Breaks your entire MVP build into concrete daily deliverables across foundation, backend, frontend, and production hardening phases.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. GUIDED ARCHITECTURE STUDIO (THE TOOL) */}
+        <section id="studio" className="py-16 border-b border-white/10 bg-[#050507]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <IntakeWizard
+              onGenerateSpec={handleGenerateCustomSpec}
+              onSelectPreset={handleSelectPreset}
+              isGenerating={isGenerating}
+              selectedPresetId={selectedPresetId}
+            />
+          </div>
+        </section>
+
+        {/* 4. INTERACTIVE SPECIFICATION WORKBENCH */}
+        <section id="preview" className="py-16 bg-black">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800 pb-5">
+              <div>
+                <span className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-semibold">
+                  INTERACTIVE SPECIFICATION WORKBENCH
+                </span>
+                <h2 className="text-xl sm:text-2xl font-bold text-white font-mono mt-1">
+                  Inspect & Export Production Blueprints
+                </h2>
+              </div>
+
+              {/* Sample Switcher */}
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-mono text-zinc-500 uppercase mr-1">
+                  Sample Specs:
+                </span>
                 {PRESETS.map((p) => {
                   const isActive = selectedPresetId === p.id;
                   return (
@@ -339,9 +564,9 @@ export default function Home() {
                       key={p.id}
                       type="button"
                       onClick={() => handleSelectPreset(p.id)}
-                      className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider transition-all rounded-none cursor-pointer active:translate-y-[1px] ${
+                      className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider transition-all cursor-pointer ${
                         isActive
-                          ? 'bg-white text-black font-bold shadow-[0_0_12px_rgba(255,255,255,0.2)]'
+                          ? 'bg-white text-black font-bold'
                           : 'bg-[#121214] text-zinc-400 hover:text-white border border-white/10'
                       }`}
                     >
@@ -351,51 +576,67 @@ export default function Home() {
                 })}
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Section 1: Intake Wizard */}
-        <section id="intake-wizard" className="w-full">
-          <IntakeWizard
-            onGenerateSpec={handleGenerateCustomSpec}
-            onSelectPreset={handleSelectPreset}
-            isGenerating={isGenerating}
-            selectedPresetId={selectedPresetId}
-          />
+            <SpecViewer spec={activeSpec} />
+          </div>
         </section>
 
-        {/* Section 2: Spec Viewer */}
-        <section id="spec-viewer" className="w-full">
-          <div className="mb-3 flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Layers className="w-4 h-4 text-cyan-400" />
-              <h2 className="text-sm font-mono font-bold text-white uppercase tracking-widest">
-                SYNTHESIZED ARCHITECTURAL SPECIFICATION
-              </h2>
-            </div>
-            <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider">
-              INSPECTION READY · 6 VIEWPORTS
-            </span>
-          </div>
+        {/* 5. 14-DAY DELIVERY & STUDIO CTA */}
+        <section id="roadmap" className="py-16 border-t border-white/10 bg-[#09090b]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-[#121214] border border-white/10 p-8 sm:p-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+              <div className="max-w-2xl">
+                <span className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-semibold">
+                  FROM SPECIFICATION TO DEPLOYMENT
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white font-mono mt-2">
+                  Ready to Build Your Architecture?
+                </h2>
+                <p className="text-sm text-zinc-400 mt-2 leading-relaxed">
+                  Export your generated <code className="text-zinc-200">ARCHITECTURE.md</code>,{' '}
+                  <code className="text-zinc-200">schema.prisma</code>, and{' '}
+                  <code className="text-zinc-200">PRD.md</code> directly into your repository, or
+                  partner with Quzar Studio for end-to-end engineering delivery.
+                </p>
+              </div>
 
-          <SpecViewer spec={activeSpec} />
+              <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                <button
+                  type="button"
+                  onClick={() => scrollTo('studio')}
+                  className="px-6 py-3.5 bg-white text-black hover:bg-cyan-400 font-mono text-xs font-bold uppercase tracking-widest transition-colors cursor-pointer"
+                >
+                  BUILD NEW SPECIFICATION
+                </button>
+                <a
+                  href="https://quzar-io.web.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center space-x-2 px-6 py-3.5 bg-[#18181b] text-white hover:bg-zinc-800 border border-white/15 font-mono text-xs font-bold uppercase tracking-widest transition-colors"
+                >
+                  <span>QUZAR STUDIO</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+          </div>
         </section>
       </main>
 
-      {/* Global Architectural Footer */}
-      <footer className="w-full border-t border-zinc-800 bg-[#09090b] mt-16 text-xs font-mono text-zinc-500 py-6">
+      {/* Global Footer */}
+      <footer className="w-full border-t border-zinc-800 bg-black text-xs font-mono text-zinc-500 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
             <span className="text-white font-bold tracking-wider">QUZAR SHIP</span>
-            <span>//</span>
-            <span>ENGINEERED BY</span>
+            <span>·</span>
+            <span>Built by</span>
             <a
               href="https://piyushratan.in"
               target="_blank"
               rel="noopener noreferrer"
               className="text-cyan-400 hover:text-cyan-300 font-medium hover:underline"
             >
-              PIYUSH RATAN
+              Piyush Ratan
             </a>
           </div>
 
@@ -406,7 +647,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className="hover:text-zinc-300 uppercase tracking-wider"
             >
-              QUZAR STUDIO
+              Quzar Studio
             </a>
             <a
               href="https://github.com/PiyushRatan/quzar-ship"
@@ -414,9 +655,8 @@ export default function Home() {
               rel="noopener noreferrer"
               className="hover:text-zinc-300 uppercase tracking-wider"
             >
-              GITHUB REPO
+              GitHub
             </a>
-            <span className="text-zinc-600">DIRECTIVES 2.0 PROTOCOL</span>
           </div>
         </div>
       </footer>

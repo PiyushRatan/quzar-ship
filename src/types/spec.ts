@@ -28,7 +28,8 @@ export interface ApiEndpoint {
 
 export interface SecurityGuard {
   title: string;
-  directive: string;
+  policy?: string;
+  directive?: string;
   enforcement: string;
   status: 'ENFORCED' | 'AUDITED';
 }
@@ -38,7 +39,9 @@ export interface ComponentBlueprint {
   components: Array<{
     name: string;
     role: string;
-    directive: string;
+    spec?: string;
+    policy?: string;
+    directive?: string;
   }>;
 }
 

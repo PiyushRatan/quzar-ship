@@ -27,7 +27,7 @@ export function UiBlueprintTab({ spec }: UiBlueprintTabProps) {
                   <div key={c.name} className="border-l-2 border-cyan-400 pl-2">
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-white text-xs">{c.name}</span>
-                      <span className="text-[9px] text-cyan-400">{c.directive}</span>
+                      <span className="text-[9px] text-cyan-400">{c.spec || c.policy || c.directive}</span>
                     </div>
                     <div className="text-[11px] text-zinc-400 font-sans mt-0.5">
                       {c.role}

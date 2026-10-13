@@ -375,10 +375,10 @@ export default function ToolPage() {
     <div className="min-h-screen bg-black text-zinc-100 flex flex-col font-sans">
       <Header />
 
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+      <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6 space-y-10">
         {/* Step-by-step Guided Builder */}
         <section>
-          <div className="mb-6">
+          <div className="mb-5">
             <h1 className="text-2xl sm:text-3xl font-bold text-white">
               Product Blueprint Builder
             </h1>

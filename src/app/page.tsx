@@ -37,79 +37,99 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="flex-1">
-        {/* 1. HERO SECTION (No top badge, reduced top margin) */}
-        <section className="relative border-b border-white/10 bg-[#050507] overflow-hidden pt-8 sm:pt-12 pb-14 sm:pb-18">
+        {/* 1. HERO SECTION */}
+        <section className="relative border-b border-white/10 bg-[#050507] overflow-hidden pt-8 sm:pt-10 pb-12 sm:pb-14">
           <div className="absolute inset-0 bg-grid-architectural opacity-35 pointer-events-none"></div>
 
-          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl">
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.1]">
-                Turn Your App Idea into a Ready-to-Build Blueprint.
-              </h1>
+          <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              {/* Left Column: Headline & CTAs */}
+              <div className="lg:col-span-7">
+                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08]">
+                  Turn Your App Idea into a Ready-to-Build Blueprint.
+                </h1>
 
-              <p className="text-base sm:text-lg text-zinc-400 mt-4 leading-relaxed max-w-2xl">
-                Most great ideas get stuck because planning the tech feels overwhelming.
-                Describe what you want to build in plain English—or paste a website you love—and
-                get a complete product plan, 14-day launch roadmap, and developer specs in 60 seconds.
-              </p>
+                <p className="text-base sm:text-lg text-zinc-400 mt-4 leading-relaxed max-w-3xl">
+                  Most great ideas get stuck because planning the tech feels overwhelming.
+                  Describe what you want to build in plain English—or paste a website you love—and
+                  get a complete product plan, 14-day launch roadmap, and developer specs in 60 seconds.
+                </p>
 
-              {/* Hero CTAs */}
-              <div className="mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
-                <Link
-                  href="/tool"
-                  className="inline-flex items-center justify-center space-x-3 px-7 py-3.5 bg-white text-black hover:bg-cyan-400 font-mono text-xs sm:text-sm font-bold uppercase tracking-widest transition-colors"
-                >
-                  <span>USE TOOL</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+                {/* Hero CTAs */}
+                <div className="mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+                  <Link
+                    href="/tool"
+                    className="inline-flex items-center justify-center space-x-3 px-7 py-3.5 bg-white text-black hover:bg-cyan-400 font-mono text-xs sm:text-sm font-bold uppercase tracking-widest transition-colors"
+                  >
+                    <span>USE TOOL</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
 
-                <a
-                  href="#story"
-                  className="inline-flex items-center justify-center space-x-2 px-6 py-3.5 bg-[#121214] text-zinc-200 hover:text-white border border-white/15 hover:border-white/40 font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors"
-                >
-                  <span>SEE HOW IT WORKS</span>
-                </a>
+                  <a
+                    href="#story"
+                    className="inline-flex items-center justify-center space-x-2 px-6 py-3.5 bg-[#121214] text-zinc-200 hover:text-white border border-white/15 hover:border-white/40 font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors"
+                  >
+                    <span>SEE HOW IT WORKS</span>
+                  </a>
+                </div>
               </div>
 
-              {/* Simple Highlights Strip */}
-              <div className="mt-10 pt-6 border-t border-zinc-800/80 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-                <div>
-                  <div className="text-white font-semibold">Plain English</div>
-                  <div className="text-zinc-500 mt-0.5">No coding required</div>
+              {/* Right Column: Instant Summary Card */}
+              <div className="lg:col-span-5 bg-[#0b0b0e] border border-white/10 p-6">
+                <div className="text-xs font-mono uppercase tracking-widest text-cyan-400 mb-3">
+                  Included in Every Blueprint
                 </div>
-                <div>
-                  <div className="text-white font-semibold">Website Scanner</div>
-                  <div className="text-zinc-500 mt-0.5">Learn from competitors</div>
-                </div>
-                <div>
-                  <div className="text-white font-semibold">14-Day Plan</div>
-                  <div className="text-zinc-500 mt-0.5">Step-by-step daily checklist</div>
-                </div>
-                <div>
-                  <div className="text-white font-semibold">Instant Export</div>
-                  <div className="text-zinc-500 mt-0.5">Ready for any developer</div>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-start space-x-3 p-3 bg-[#111115] border border-zinc-800/80">
+                    <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-semibold text-white text-xs">Plain-English Product Plan</div>
+                      <div className="text-zinc-400 text-xs mt-0.5">Clear screens, user flows, and feature priorities</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3 p-3 bg-[#111115] border border-zinc-800/80">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-semibold text-white text-xs">Competitor Website Scanner</div>
+                      <div className="text-zinc-400 text-xs mt-0.5">Paste any link to extract features that work</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3 p-3 bg-[#111115] border border-zinc-800/80">
+                    <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-semibold text-white text-xs">14-Day Launch Checklist</div>
+                      <div className="text-zinc-400 text-xs mt-0.5">Step-by-step daily tasks from Day 1 to launch</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3 p-3 bg-[#111115] border border-zinc-800/80">
+                    <CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-semibold text-white text-xs">One-Click Developer Export</div>
+                      <div className="text-zinc-400 text-xs mt-0.5">Downloadable PRD, architecture, and database files</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 2. SECOND SECTION: WHAT YOU GET (Simple & Intuitive) */}
-        <section id="capabilities" className="py-14 border-b border-white/10 bg-black">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mb-10">
+        {/* 2. SECOND SECTION: WHAT YOU GET */}
+        <section id="capabilities" className="py-12 border-b border-white/10 bg-black">
+          <div className="w-full px-4 sm:px-6 lg:px-8">
+            <div className="mb-8">
               <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">
                 What You Get
               </span>
               <h2 className="text-2xl sm:text-3xl font-bold text-white mt-1">
                 Everything Mapped Out Before You Write a Single Line of Code
               </h2>
-              <p className="text-sm text-zinc-400 mt-2 leading-relaxed">
+              <p className="text-sm text-zinc-400 mt-1.5">
                 We hide all the confusing technical decisions behind the scenes and hand you a clean, organized package.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-[#0b0b0e] border border-white/10 p-6">
                 <Globe className="w-6 h-6 text-cyan-400 mb-4" />
                 <h3 className="text-base font-bold text-white">
@@ -154,9 +174,9 @@ export default function Home() {
         </section>
 
         {/* 3. STORYTELLING SECTION: HOW IT WORKS */}
-        <section id="story" className="py-16 border-b border-white/10 bg-[#050507]">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mb-12">
+        <section id="story" className="py-12 border-b border-white/10 bg-[#050507]">
+          <div className="w-full px-4 sm:px-6 lg:px-8">
+            <div className="mb-8">
               <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">
                 The Journey
               </span>
@@ -165,7 +185,7 @@ export default function Home() {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Step 1 */}
               <div className="bg-[#0b0b0e] border border-white/10 p-6 flex flex-col justify-between">
                 <div>
@@ -221,7 +241,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-10 flex justify-center sm:justify-start">
+            <div className="mt-8 flex justify-start">
               <Link
                 href="/tool"
                 className="inline-flex items-center space-x-3 px-7 py-3.5 bg-white text-black hover:bg-cyan-400 font-mono text-xs font-bold uppercase tracking-widest transition-colors"
@@ -234,9 +254,9 @@ export default function Home() {
         </section>
 
         {/* 4. SAMPLE BLUEPRINTS PREVIEW */}
-        <section id="examples" className="py-16 bg-black">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800 pb-5">
+        <section id="examples" className="py-12 bg-black">
+          <div className="w-full px-4 sm:px-6 lg:px-8 space-y-5">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800 pb-4">
               <div>
                 <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">
                   Live Examples
@@ -273,14 +293,14 @@ export default function Home() {
         </section>
 
         {/* 5. BOTTOM CALL TO ACTION */}
-        <section className="py-14 border-t border-white/10 bg-[#08080b]">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-[#111115] border border-white/10 p-8 sm:p-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-              <div className="max-w-xl">
+        <section className="py-12 border-t border-white/10 bg-[#08080b]">
+          <div className="w-full px-4 sm:px-6 lg:px-8">
+            <div className="bg-[#111115] border border-white/10 p-6 sm:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+              <div className="max-w-2xl">
                 <h2 className="text-2xl sm:text-3xl font-bold text-white">
                   Ready to Turn Your Idea into Reality?
                 </h2>
-                <p className="text-sm text-zinc-400 mt-2 leading-relaxed">
+                <p className="text-sm text-zinc-400 mt-1.5 leading-relaxed">
                   Launch the interactive tool to create your own custom product blueprint in under a minute, or work directly with Quzar Studio to build and launch your MVP.
                 </p>
               </div>
@@ -309,8 +329,8 @@ export default function Home() {
       </main>
 
       {/* Global Footer */}
-      <footer className="w-full border-t border-zinc-800 bg-black text-xs font-mono text-zinc-500 py-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="w-full border-t border-zinc-800 bg-black text-xs font-mono text-zinc-500 py-6">
+        <div className="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
             <span className="text-white font-bold tracking-wider">QUZAR SHIP</span>
             <span>·</span>

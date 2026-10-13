@@ -169,7 +169,7 @@ ${d.deliverables.map((del) => `- [${d.completed ? 'x' : ' '}] ${del}`).join('\n'
         </div>
       </div>
 
-      {/* High-Density Tab Rail */}
+      {/* Intuitive Tab Rail */}
       <div className="border-b border-zinc-800 bg-[#09090b] flex overflow-x-auto scrollbar-none">
         <button
           type="button"
@@ -181,33 +181,7 @@ ${d.deliverables.map((del) => `- [${d.completed ? 'x' : ' '}] ${del}`).join('\n'
           }`}
         >
           <Layers className="w-3.5 h-3.5 text-cyan-400" />
-          <span>1. TOPOLOGY & ARCHITECTURE</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab('database')}
-          className={`flex items-center space-x-2 px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] ${
-            activeTab === 'database'
-              ? 'border-cyan-400 text-white bg-[#121214] font-bold'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-[#121214]/50'
-          }`}
-        >
-          <Database className="w-3.5 h-3.5 text-emerald-400" />
-          <span>2. SCHEMA.PRISMA ({spec.databaseSchema.tablesCount} MODELS)</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab('api')}
-          className={`flex items-center space-x-2 px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] ${
-            activeTab === 'api'
-              ? 'border-cyan-400 text-white bg-[#121214] font-bold'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-[#121214]/50'
-          }`}
-        >
-          <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
-          <span>3. API CONTRACTS & GUARDS</span>
+          <span>1. OVERVIEW & ARCHITECTURE</span>
         </button>
 
         <button
@@ -220,7 +194,7 @@ ${d.deliverables.map((del) => `- [${d.completed ? 'x' : ' '}] ${del}`).join('\n'
           }`}
         >
           <Layout className="w-3.5 h-3.5 text-purple-400" />
-          <span>4. UI/UX BLUEPRINT</span>
+          <span>2. SCREENS & UI PLAN</span>
         </button>
 
         <button
@@ -233,7 +207,7 @@ ${d.deliverables.map((del) => `- [${d.completed ? 'x' : ' '}] ${del}`).join('\n'
           }`}
         >
           <Calendar className="w-3.5 h-3.5 text-amber-400" />
-          <span>5. 14-DAY ROADMAP ({progressPercent}%)</span>
+          <span>3. 14-DAY LAUNCH PLAN ({progressPercent}%)</span>
         </button>
 
         <button
@@ -246,7 +220,33 @@ ${d.deliverables.map((del) => `- [${d.completed ? 'x' : ' '}] ${del}`).join('\n'
           }`}
         >
           <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
-          <span>6. INFRASTRUCTURE COST MATRIX</span>
+          <span>4. HOSTING & BUDGET</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('database')}
+          className={`flex items-center space-x-2 px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] ${
+            activeTab === 'database'
+              ? 'border-cyan-400 text-white bg-[#121214] font-bold'
+              : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-[#121214]/50'
+          }`}
+        >
+          <Database className="w-3.5 h-3.5 text-emerald-400" />
+          <span>5. DATABASE ({spec.databaseSchema.tablesCount} TABLES)</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('api')}
+          className={`flex items-center space-x-2 px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] ${
+            activeTab === 'api'
+              ? 'border-cyan-400 text-white bg-[#121214] font-bold'
+              : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-[#121214]/50'
+          }`}
+        >
+          <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+          <span>6. API & SECURITY</span>
         </button>
       </div>
 

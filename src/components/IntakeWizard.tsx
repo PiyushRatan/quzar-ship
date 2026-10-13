@@ -8,22 +8,15 @@ import {
 } from '../types/spec';
 import { PRESETS } from '../data/presets';
 import {
-  Database,
-  Lock,
-  Cloud,
   Globe,
   Loader2,
   Zap,
-  CheckCircle2,
   ChevronRight,
   ChevronLeft,
-  Sliders,
-  Layers,
-  Shield,
-  Radio,
-  Server,
-  DollarSign,
-  FileCode,
+  CheckCircle2,
+  Sparkles,
+  Compass,
+  Rocket,
 } from 'lucide-react';
 
 interface IntakeWizardProps {
@@ -43,41 +36,57 @@ interface IntakeWizardProps {
   selectedPresetId?: string;
 }
 
-const DATABASES: DatabaseOption[] = [
-  'PostgreSQL',
-  'MySQL',
-  'SQLite',
-  'MongoDB',
-  'Firestore',
+const PRODUCT_TYPES = [
+  {
+    id: 'webapp',
+    label: 'Web App & Dashboard',
+    desc: 'Interactive workspace with user accounts and live data',
+  },
+  {
+    id: 'mobile-web',
+    label: 'Mobile-First Platform',
+    desc: 'Fast, responsive experience designed for phones and tablets',
+  },
+  {
+    id: 'marketplace',
+    label: 'Storefront or Portal',
+    desc: 'Customer-facing catalog, bookings, or checkout flow',
+  },
+  {
+    id: 'internal',
+    label: 'Internal Team Tool',
+    desc: 'Operations dashboard to automate your daily workflow',
+  },
 ];
 
-const AUTH_PROVIDERS: AuthOption[] = [
-  'NextAuth',
-  'Supabase Auth',
-  'Clerk',
-  'Custom JWT',
-];
-
-const DEPLOYMENT_TARGETS: DeploymentOption[] = [
-  'Vercel Edge',
-  'Docker / VPS',
-  'Cloudflare Workers',
-  'AWS',
-];
-
-const ARCHITECTURAL_MODULES = [
-  { id: 'multitenancy', label: 'Multi-Tenant Isolation', desc: 'Row-level and tenant workspace boundary enforcement' },
-  { id: 'streaming', label: 'Real-Time SSE & Streaming', desc: 'Low-latency server-sent events and token streaming' },
-  { id: 'async-queue', label: 'Async Job Worker Queues', desc: 'Background task scheduling with Redis / BullMQ' },
-  { id: 'vector-rag', label: 'Vector Knowledge Retrieval', desc: 'pgvector semantic search and similarity matching' },
-  { id: 'billing', label: 'Stripe Billing & Ledger', desc: 'Subscription webhooks and idempotent transactions' },
-  { id: 'audit-log', label: 'Cryptographic Audit Trail', desc: 'Immutable security event and access logging' },
-];
-
-const SCALE_TARGETS = [
-  { id: 'starter', label: 'Starter MVP', desc: 'Optimized for zero-cost starter tiers & rapid launch' },
-  { id: 'production', label: 'High-Throughput Production', desc: 'Clustered persistence with connection pooling' },
-  { id: 'distributed', label: 'Distributed Edge Mesh', desc: 'Sub-50ms global response times across regional nodes' },
+const LAUNCH_STYLES = [
+  {
+    id: 'starter',
+    label: '14-Day Fast MVP',
+    desc: 'Essential core features, $0 starter hosting, fastest path to launch',
+    db: 'PostgreSQL' as DatabaseOption,
+    auth: 'NextAuth' as AuthOption,
+    deploy: 'Vercel Edge' as DeploymentOption,
+    modules: ['multitenancy'],
+  },
+  {
+    id: 'growth',
+    label: 'Growth-Ready Product',
+    desc: 'Includes payments, real-time updates, and scalable cloud storage',
+    db: 'PostgreSQL' as DatabaseOption,
+    auth: 'Supabase Auth' as AuthOption,
+    deploy: 'Vercel Edge' as DeploymentOption,
+    modules: ['multitenancy', 'streaming', 'billing'],
+  },
+  {
+    id: 'scale',
+    label: 'Complete Business Suite',
+    desc: 'Full automation, team permissions, AI search, and security logs',
+    db: 'PostgreSQL' as DatabaseOption,
+    auth: 'Clerk' as AuthOption,
+    deploy: 'AWS' as DeploymentOption,
+    modules: ['multitenancy', 'streaming', 'async-queue', 'vector-rag', 'billing', 'audit-log'],
+  },
 ];
 
 export function IntakeWizard({
@@ -86,33 +95,15 @@ export function IntakeWizard({
   isGenerating,
   selectedPresetId,
 }: IntakeWizardProps) {
-  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(1);
 
-  // Form states
-  const [conceptName, setConceptName] = useState('CognitiveMesh AI Platform');
+  const [conceptName, setConceptName] = useState('Nova AI Assistant');
   const [problemStatement, setProblemStatement] = useState(
-    'High-throughput multi-tenant AI reasoning engine requiring streaming token telemetry, vectorized knowledge retrieval with pgvector, strict per-tenant token rate quotas, and sub-100ms cold starts on distributed edge runtimes.'
+    'A smart customer support assistant that learns from a company website, answers visitor questions instantly 24/7, and captures qualified leads for the sales team.'
   );
-  const [targetAudience, setTargetAudience] = useState('Software Engineers & Product Operators');
-  const [referenceUrl, setReferenceUrl] = useState('https://github.com/anthropics/anthropic-sdk-typescript');
-
-  const [targetDatabase, setTargetDatabase] = useState<DatabaseOption>('PostgreSQL');
-  const [authProvider, setAuthProvider] = useState<AuthOption>('NextAuth');
-  const [deploymentTarget, setDeploymentTarget] = useState<DeploymentOption>('Vercel Edge');
-
-  const [selectedModules, setSelectedModules] = useState<string[]>([
-    'multitenancy',
-    'streaming',
-    'vector-rag',
-    'billing',
-  ]);
-  const [scaleTarget, setScaleTarget] = useState('starter');
-
-  const toggleModule = (id: string) => {
-    setSelectedModules((prev) =>
-      prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id]
-    );
-  };
+  const [referenceUrl, setReferenceUrl] = useState('');
+  const [productType, setProductType] = useState('webapp');
+  const [launchStyleId, setLaunchStyleId] = useState('growth');
 
   const handleApplyPreset = (presetId: string) => {
     const found = PRESETS.find((p) => p.id === presetId);
@@ -120,9 +111,6 @@ export function IntakeWizard({
       setConceptName(found.conceptName);
       setProblemStatement(found.problemStatement);
       setReferenceUrl(found.referenceUrl || '');
-      setTargetDatabase(found.targetDatabase);
-      setAuthProvider(found.authProvider);
-      setDeploymentTarget(found.deploymentTarget);
       onSelectPreset(presetId);
     }
   };
@@ -131,406 +119,310 @@ export function IntakeWizard({
     if (e) e.preventDefault();
     if (!conceptName.trim() || !problemStatement.trim()) return;
 
+    const chosenStyle =
+      LAUNCH_STYLES.find((s) => s.id === launchStyleId) || LAUNCH_STYLES[1];
+    const chosenProduct =
+      PRODUCT_TYPES.find((p) => p.id === productType) || PRODUCT_TYPES[0];
+
     onGenerateSpec({
       conceptName,
-      problemStatement,
-      targetAudience,
+      problemStatement: `${problemStatement} (Format: ${chosenProduct.label})`,
+      targetAudience: 'Customers & Business Teams',
       referenceUrl: referenceUrl.trim() || undefined,
-      targetDatabase,
-      authProvider,
-      deploymentTarget,
-      selectedModules,
-      scaleTarget,
+      targetDatabase: chosenStyle.db,
+      authProvider: chosenStyle.auth,
+      deploymentTarget: chosenStyle.deploy,
+      selectedModules: chosenStyle.modules,
+      scaleTarget: chosenStyle.id,
     });
   };
 
   return (
-    <div className="w-full bg-[#0e0e11] border border-white/10 rounded-none p-6 sm:p-8 font-mono">
-      {/* Studio Header & Step Progress */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-zinc-800 gap-4">
+    <div className="w-full bg-[#0b0b0e] border border-white/10 p-6 sm:p-8">
+      {/* Progress Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-zinc-800/80 gap-4">
         <div>
-          <span className="text-xs uppercase tracking-widest text-cyan-400 font-semibold">
-            GUIDED ARCHITECTURE STUDIO
+          <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">
+            Step {step} of 3
           </span>
-          <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide mt-1">
-            Configure Your Product Specifications
+          <h2 className="text-xl sm:text-2xl font-bold text-white mt-1">
+            {step === 1 && 'Tell us about your idea'}
+            {step === 2 && 'Add a reference website (optional)'}
+            {step === 3 && 'Choose how you want to launch'}
           </h2>
-          <p className="text-xs text-zinc-400 mt-1 font-sans">
-            Follow the 3-step pipeline to customize database schemas, security guards, API contracts, and roadmap parameters.
-          </p>
         </div>
 
-        {/* Step Tabs */}
+        {/* Simple Step Dots */}
         <div className="flex items-center space-x-2">
           {[
-            { step: 1, title: 'Concept & Scope' },
-            { step: 2, title: 'Stack Primitives' },
-            { step: 3, title: 'Modules & Scale' },
-          ].map((s) => {
-            const isActive = currentStep === s.step;
-            const isDone = currentStep > s.step;
-            return (
-              <button
-                key={s.step}
-                type="button"
-                onClick={() => setCurrentStep(s.step)}
-                className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider flex items-center space-x-1.5 border transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-white text-black font-bold border-white'
-                    : isDone
-                    ? 'bg-[#18181b] text-cyan-400 border-cyan-400/40'
-                    : 'bg-[#121214] text-zinc-500 border-zinc-800 hover:text-zinc-300'
-                }`}
-              >
-                <span>{s.step}.</span>
-                <span className="hidden sm:inline">{s.title}</span>
-              </button>
-            );
-          })}
+            { num: 1, label: '1. Your Idea' },
+            { num: 2, label: '2. Inspiration' },
+            { num: 3, label: '3. Launch Style' },
+          ].map((item) => (
+            <button
+              key={item.num}
+              type="button"
+              onClick={() => setStep(item.num)}
+              className={`px-3 py-1.5 text-xs font-mono transition-colors cursor-pointer border ${
+                step === item.num
+                  ? 'bg-white text-black font-bold border-white'
+                  : step > item.num
+                  ? 'bg-[#141418] text-cyan-400 border-cyan-400/30'
+                  : 'bg-[#121214] text-zinc-500 border-zinc-800 hover:text-zinc-300'
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Preset Accelerators */}
-      <div className="mt-5 pt-1">
-        <div className="flex items-center justify-between mb-2.5">
-          <label className="text-[11px] uppercase tracking-widest text-zinc-400 font-semibold flex items-center space-x-1.5">
-            <Zap className="w-3.5 h-3.5 text-amber-400" />
-            <span>QUICK-START PRESETS</span>
-          </label>
-          <span className="text-[10px] text-zinc-500 uppercase tracking-widest">
-            1-Click Blueprint Autofill
-          </span>
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-          {PRESETS.map((preset) => {
-            const isCurrent =
-              selectedPresetId === preset.id || conceptName === preset.conceptName;
-            return (
-              <button
-                key={preset.id}
-                type="button"
-                onClick={() => handleApplyPreset(preset.id)}
-                className={`p-2.5 text-left border transition-all cursor-pointer rounded-none active:translate-y-[1px] ${
-                  isCurrent
-                    ? 'bg-[#18181b] border-cyan-400 text-white shadow-[0_0_12px_rgba(6,182,212,0.15)]'
-                    : 'bg-[#121214] border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
-                }`}
-              >
-                <div className="text-[11px] font-bold uppercase tracking-wider text-white">
-                  {preset.name}
-                </div>
-                <div className="text-[10px] text-zinc-500 truncate mt-1 font-sans">
-                  {preset.tagline}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Wizard Form Panels */}
-      <form onSubmit={handleSubmit} className="mt-6">
-        {/* STEP 1: Concept & Scope */}
-        {currentStep === 1 && (
-          <div className="space-y-5 animate-fadeIn">
-            <div className="bg-[#121214] border border-zinc-800 p-4">
-              <span className="text-xs font-bold text-white uppercase tracking-wider block mb-1">
-                Step 1: Product Concept & Core Problem
-              </span>
-              <p className="text-xs text-zinc-400 font-sans">
-                Define the core problem your system solves, its target users, and an optional reference URL.
-              </p>
+      {/* STEP 1: The Idea */}
+      {step === 1 && (
+        <div className="mt-6 space-y-6">
+          {/* Quick Templates */}
+          <div>
+            <span className="block text-xs text-zinc-400 mb-2.5">
+              Need inspiration? Pick a starter template to autofill:
+            </span>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+              {PRESETS.map((preset) => {
+                const isSelected =
+                  selectedPresetId === preset.id ||
+                  conceptName === preset.conceptName;
+                return (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => handleApplyPreset(preset.id)}
+                    className={`p-3 text-left border transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-[#16161a] border-cyan-400 text-white'
+                        : 'bg-[#111114] border-zinc-800/90 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+                    }`}
+                  >
+                    <div className="text-xs font-bold text-white">
+                      {preset.name}
+                    </div>
+                    <div className="text-[11px] text-zinc-500 truncate mt-0.5">
+                      {preset.tagline}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
+          </div>
 
+          <div className="space-y-4">
             <div>
-              <label className="block text-xs uppercase tracking-widest text-zinc-300 mb-1.5 font-semibold">
-                Project Title / System Name
+              <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                What is your project or product called?
               </label>
               <input
                 type="text"
                 required
                 value={conceptName}
                 onChange={(e) => setConceptName(e.target.value)}
-                placeholder="e.g. CognitiveMesh AI Platform"
-                className="w-full bg-[#121214] border border-zinc-800 focus:border-cyan-400 px-3.5 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none transition-colors font-mono"
+                placeholder="e.g. Nova AI, Pulse CRM, SwiftBook..."
+                className="w-full bg-[#121215] border border-zinc-800 focus:border-cyan-400 px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-widest text-zinc-300 mb-1.5 font-semibold">
-                Problem Statement & Architecture Scope
+              <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                Describe what it does in plain English
               </label>
               <textarea
                 required
-                rows={3}
+                rows={4}
                 value={problemStatement}
                 onChange={(e) => setProblemStatement(e.target.value)}
-                placeholder="Describe throughput targets, state persistence requirements, security guards, and data topology..."
-                className="w-full bg-[#121214] border border-zinc-800 focus:border-cyan-400 px-3.5 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none transition-colors font-mono leading-relaxed resize-y"
+                placeholder="Explain it simply: Who uses it, what problem does it solve, and what is the main action users take?"
+                className="w-full bg-[#121215] border border-zinc-800 focus:border-cyan-400 px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none transition-colors leading-relaxed resize-y"
+              />
+              <p className="text-[11px] text-zinc-500 mt-1.5">
+                No technical terms needed. We automatically translate your idea into a full system plan.
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-zinc-800/80 flex justify-end">
+            <button
+              type="button"
+              onClick={() => setStep(2)}
+              className="inline-flex items-center space-x-2 px-6 py-3 bg-white text-black hover:bg-cyan-400 font-mono text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
+            >
+              <span>Next: Add Inspiration</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* STEP 2: Inspiration Link */}
+      {step === 2 && (
+        <div className="mt-6 space-y-6">
+          <div className="bg-[#121215] border border-zinc-800 p-5">
+            <div className="flex items-start space-x-3">
+              <Globe className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
+              <div>
+                <h3 className="text-sm font-semibold text-white">
+                  Have a competitor or reference website you like?
+                </h3>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Paste any website URL below. Our built-in research engine will scan their pages to understand their features and structure—or leave it blank to build from scratch.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <input
+                type="url"
+                value={referenceUrl}
+                onChange={(e) => setReferenceUrl(e.target.value)}
+                placeholder="https://example.com (optional)"
+                className="w-full bg-[#0b0b0e] border border-zinc-800 focus:border-cyan-400 px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none transition-colors font-mono"
               />
             </div>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs uppercase tracking-widest text-zinc-300 mb-1.5 font-semibold">
-                  Target Audience / End Users
-                </label>
-                <input
-                  type="text"
-                  value={targetAudience}
-                  onChange={(e) => setTargetAudience(e.target.value)}
-                  placeholder="e.g. Enterprise Engineers, SMB Teams"
-                  className="w-full bg-[#121214] border border-zinc-800 focus:border-cyan-400 px-3.5 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none transition-colors font-mono"
-                />
-              </div>
+          <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
+            <button
+              type="button"
+              onClick={() => setStep(1)}
+              className="inline-flex items-center space-x-2 px-4 py-2.5 border border-zinc-800 text-zinc-300 hover:text-white font-mono text-xs uppercase cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Back</span>
+            </button>
 
-              <div>
-                <label className="text-xs uppercase tracking-widest text-zinc-300 mb-1.5 font-semibold flex items-center space-x-1.5">
-                  <Globe className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>Competitor or Reference URL (Optional Crawler)</span>
-                </label>
-                <input
-                  type="url"
-                  value={referenceUrl}
-                  onChange={(e) => setReferenceUrl(e.target.value)}
-                  placeholder="https://github.com/org/repo or https://competitor.com"
-                  className="w-full bg-[#121214] border border-zinc-800 focus:border-cyan-400 px-3.5 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none transition-colors font-mono"
-                />
-              </div>
-            </div>
-
-            <div className="pt-4 flex justify-end">
+            <div className="flex items-center space-x-3">
+              {!referenceUrl && (
+                <button
+                  type="button"
+                  onClick={() => setStep(3)}
+                  className="px-4 py-2.5 text-xs font-mono text-zinc-400 hover:text-white uppercase cursor-pointer"
+                >
+                  Skip this step
+                </button>
+              )}
               <button
                 type="button"
-                onClick={() => setCurrentStep(2)}
-                className="inline-flex items-center space-x-2 px-5 py-2.5 bg-white text-black hover:bg-cyan-400 font-mono text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
+                onClick={() => setStep(3)}
+                className="inline-flex items-center space-x-2 px-6 py-3 bg-white text-black hover:bg-cyan-400 font-mono text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
               >
-                <span>Continue to Stack Primitives</span>
+                <span>Next: Launch Style</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* STEP 2: Stack Primitives */}
-        {currentStep === 2 && (
-          <div className="space-y-5 animate-fadeIn">
-            <div className="bg-[#121214] border border-zinc-800 p-4">
-              <span className="text-xs font-bold text-white uppercase tracking-wider block mb-1">
-                Step 2: Core Engineering Stack & Infrastructure
-              </span>
-              <p className="text-xs text-zinc-400 font-sans">
-                Select your database engine, identity provider, and deployment runtime environment.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Target Database */}
-              <div className="bg-[#121214] border border-zinc-800 p-4">
-                <label className="block text-xs uppercase tracking-widest text-zinc-300 mb-3 font-semibold flex items-center space-x-1.5">
-                  <Database className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>Primary Database</span>
-                </label>
-                <div className="space-y-1.5">
-                  {DATABASES.map((db) => {
-                    const active = targetDatabase === db;
-                    return (
-                      <button
-                        key={db}
-                        type="button"
-                        onClick={() => setTargetDatabase(db)}
-                        className={`w-full text-left px-3 py-2 text-xs font-mono transition-colors cursor-pointer border ${
-                          active
-                            ? 'bg-cyan-400 text-black font-bold border-cyan-400'
-                            : 'bg-[#18181b] text-zinc-400 hover:text-white border-zinc-800'
-                        }`}
-                      >
-                        {db}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Auth Provider */}
-              <div className="bg-[#121214] border border-zinc-800 p-4">
-                <label className="block text-xs uppercase tracking-widest text-zinc-300 mb-3 font-semibold flex items-center space-x-1.5">
-                  <Lock className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Authentication System</span>
-                </label>
-                <div className="space-y-1.5">
-                  {AUTH_PROVIDERS.map((auth) => {
-                    const active = authProvider === auth;
-                    return (
-                      <button
-                        key={auth}
-                        type="button"
-                        onClick={() => setAuthProvider(auth)}
-                        className={`w-full text-left px-3 py-2 text-xs font-mono transition-colors cursor-pointer border ${
-                          active
-                            ? 'bg-emerald-400 text-black font-bold border-emerald-400'
-                            : 'bg-[#18181b] text-zinc-400 hover:text-white border-zinc-800'
-                        }`}
-                      >
-                        {auth}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Deployment Target */}
-              <div className="bg-[#121214] border border-zinc-800 p-4">
-                <label className="block text-xs uppercase tracking-widest text-zinc-300 mb-3 font-semibold flex items-center space-x-1.5">
-                  <Cloud className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Hosting & Runtime</span>
-                </label>
-                <div className="space-y-1.5">
-                  {DEPLOYMENT_TARGETS.map((deploy) => {
-                    const active = deploymentTarget === deploy;
-                    return (
-                      <button
-                        key={deploy}
-                        type="button"
-                        onClick={() => setDeploymentTarget(deploy)}
-                        className={`w-full text-left px-3 py-2 text-xs font-mono transition-colors cursor-pointer border ${
-                          active
-                            ? 'bg-amber-400 text-black font-bold border-amber-400'
-                            : 'bg-[#18181b] text-zinc-400 hover:text-white border-zinc-800'
-                        }`}
-                      >
-                        {deploy}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-4 flex items-center justify-between">
-              <button
-                type="button"
-                onClick={() => setCurrentStep(1)}
-                className="inline-flex items-center space-x-2 px-4 py-2 border border-zinc-700 text-zinc-300 hover:text-white font-mono text-xs uppercase cursor-pointer"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                <span>Back</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setCurrentStep(3)}
-                className="inline-flex items-center space-x-2 px-5 py-2.5 bg-white text-black hover:bg-cyan-400 font-mono text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
-              >
-                <span>Continue to Modules & Scale</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
+      {/* STEP 3: Simple Preferences & Generate */}
+      {step === 3 && (
+        <div className="mt-6 space-y-6">
+          {/* Product Format */}
+          <div>
+            <label className="block text-xs font-medium text-zinc-300 mb-2.5">
+              1. What kind of experience are you building?
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {PRODUCT_TYPES.map((pt) => {
+                const active = productType === pt.id;
+                return (
+                  <button
+                    key={pt.id}
+                    type="button"
+                    onClick={() => setProductType(pt.id)}
+                    className={`p-4 text-left border transition-all cursor-pointer ${
+                      active
+                        ? 'bg-[#16161b] border-cyan-400 text-white'
+                        : 'bg-[#111114] border-zinc-800 text-zinc-400 hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold text-white">
+                        {pt.label}
+                      </span>
+                      {active && (
+                        <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+                      )}
+                    </div>
+                    <p className="text-xs text-zinc-500 mt-1">{pt.desc}</p>
+                  </button>
+                );
+              })}
             </div>
           </div>
-        )}
 
-        {/* STEP 3: Modules & Scale (Giving user granular control) */}
-        {currentStep === 3 && (
-          <div className="space-y-5 animate-fadeIn">
-            <div className="bg-[#121214] border border-zinc-800 p-4">
-              <span className="text-xs font-bold text-white uppercase tracking-wider block mb-1">
-                Step 3: Granular Architectural Controls & Feature Modules
-              </span>
-              <p className="text-xs text-zinc-400 font-sans">
-                Fine-tune the exact subsystem capabilities to synthesize into your database schema and API contracts.
-              </p>
+          {/* Launch Scale */}
+          <div>
+            <label className="block text-xs font-medium text-zinc-300 mb-2.5">
+              2. How should we scope your roadmap?
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {LAUNCH_STYLES.map((ls) => {
+                const active = launchStyleId === ls.id;
+                return (
+                  <button
+                    key={ls.id}
+                    type="button"
+                    onClick={() => setLaunchStyleId(ls.id)}
+                    className={`p-4 text-left border transition-all cursor-pointer ${
+                      active
+                        ? 'bg-[#16161b] border-cyan-400 text-white'
+                        : 'bg-[#111114] border-zinc-800 text-zinc-400 hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold text-white">
+                        {ls.label}
+                      </span>
+                      {active && (
+                        <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+                      )}
+                    </div>
+                    <p className="text-xs text-zinc-500 mt-1 leading-relaxed">
+                      {ls.desc}
+                    </p>
+                  </button>
+                );
+              })}
             </div>
-
-            {/* Feature Modules Toggle Grid */}
-            <div>
-              <label className="block text-xs uppercase tracking-widest text-zinc-300 mb-2 font-semibold">
-                Architecture Modules (Select all that apply)
-              </label>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {ARCHITECTURAL_MODULES.map((mod) => {
-                  const isChecked = selectedModules.includes(mod.id);
-                  return (
-                    <button
-                      key={mod.id}
-                      type="button"
-                      onClick={() => toggleModule(mod.id)}
-                      className={`p-3 text-left border transition-all cursor-pointer ${
-                        isChecked
-                          ? 'bg-[#18181b] border-cyan-400 text-white'
-                          : 'bg-[#121214] border-zinc-800 text-zinc-400 hover:border-zinc-700'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold uppercase">{mod.label}</span>
-                        {isChecked && <CheckCircle2 className="w-4 h-4 text-cyan-400" />}
-                      </div>
-                      <p className="text-[11px] text-zinc-500 font-sans mt-1">
-                        {mod.desc}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Target Scale */}
-            <div>
-              <label className="block text-xs uppercase tracking-widest text-zinc-300 mb-2 font-semibold">
-                Infrastructure Scaling Baseline
-              </label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {SCALE_TARGETS.map((st) => {
-                  const isCurrent = scaleTarget === st.id;
-                  return (
-                    <button
-                      key={st.id}
-                      type="button"
-                      onClick={() => setScaleTarget(st.id)}
-                      className={`p-3 text-left border transition-all cursor-pointer ${
-                        isCurrent
-                          ? 'bg-[#18181b] border-amber-400 text-white'
-                          : 'bg-[#121214] border-zinc-800 text-zinc-400 hover:border-zinc-700'
-                      }`}
-                    >
-                      <div className="text-xs font-bold uppercase">{st.label}</div>
-                      <p className="text-[11px] text-zinc-500 font-sans mt-1">
-                        {st.desc}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="pt-4 flex items-center justify-between border-t border-zinc-800">
-              <button
-                type="button"
-                onClick={() => setCurrentStep(2)}
-                className="inline-flex items-center space-x-2 px-4 py-2 border border-zinc-700 text-zinc-300 hover:text-white font-mono text-xs uppercase cursor-pointer"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                <span>Back</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleSubmit()}
-                disabled={isGenerating}
-                className="min-w-[280px] inline-flex items-center justify-center px-6 py-3 bg-white text-black hover:bg-cyan-400 font-mono text-xs font-bold uppercase tracking-widest cursor-pointer transition-colors disabled:opacity-50"
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin text-black" />
-                    <span>SYNTHESIZING SPECIFICATION...</span>
-                  </>
-                ) : (
-                  <span>GENERATE SPECIFICATION</span>
-                )}
-              </button>
-            </div>
+            <p className="text-[11px] text-zinc-500 mt-2">
+              Database schemas, authentication, cloud hosting, and API security are automatically selected and configured for you.
+            </p>
           </div>
-        )}
-      </form>
+
+          <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
+            <button
+              type="button"
+              onClick={() => setStep(2)}
+              className="inline-flex items-center space-x-2 px-4 py-2.5 border border-zinc-800 text-zinc-300 hover:text-white font-mono text-xs uppercase cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Back</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleSubmit()}
+              disabled={isGenerating}
+              className="min-w-[260px] inline-flex items-center justify-center px-7 py-3.5 bg-white text-black hover:bg-cyan-400 font-mono text-xs font-bold uppercase tracking-widest cursor-pointer transition-colors disabled:opacity-50"
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin text-black" />
+                  <span>BUILDING YOUR BLUEPRINT...</span>
+                </>
+              ) : (
+                <span>CREATE MY PRODUCT BLUEPRINT</span>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

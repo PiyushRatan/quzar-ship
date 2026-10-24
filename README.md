@@ -106,7 +106,7 @@ src/
 
 ### Installation
 ```bash
-git clone https://github.com/PiyushRatan/quzar-ship.git
+git clone https://github.com/quzar-io/quzar-ship.git
 cd quzar-ship
 npm install
 ```

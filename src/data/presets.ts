@@ -1,4 +1,4 @@
-﻿import { IntakePreset, ArchitectureSpec } from '../types/spec';
+import { IntakePreset, ArchitectureSpec } from '../types/spec';
 
 export const PRESETS: IntakePreset[] = [
   {
@@ -1026,7 +1026,7 @@ model OrderItem {
     conceptName: 'Quzar Core Terminal Engine',
     problemStatement:
       'Ultra-fast developer infrastructure CLI and daemon that compiles, monitors, and synchronizes local codebase changes to cloud staging environments with zero latency and offline-first SQLite cache.',
-    referenceUrl: 'https://github.com/PiyushRatan/quzar-ship',
+    referenceUrl: 'https://github.com/quzar-io/quzar-ship',
     targetDatabase: 'SQLite',
     authProvider: 'Custom JWT',
     deploymentTarget: 'Docker / VPS',
@@ -1035,7 +1035,7 @@ model OrderItem {
       conceptName: 'Quzar Core Terminal Engine',
       problemStatement:
         'Ultra-fast developer infrastructure CLI and daemon that compiles, monitors, and synchronizes local codebase changes to cloud staging environments with zero latency and offline-first SQLite cache.',
-      referenceUrl: 'https://github.com/PiyushRatan/quzar-ship',
+      referenceUrl: 'https://github.com/quzar-io/quzar-ship',
       targetDatabase: 'SQLite',
       authProvider: 'Custom JWT',
       deploymentTarget: 'Docker / VPS',

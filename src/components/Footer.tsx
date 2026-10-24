@@ -25,7 +25,7 @@ const EXTERNAL_LINKS = [
   },
   {
     label: "GitHub Repository",
-    href: "https://github.com/PiyushRatan/quzar-ship",
+    href: "https://github.com/quzar-io/quzar-ship",
   },
   {
     label: "Piyush Ratan",

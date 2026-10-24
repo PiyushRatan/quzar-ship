@@ -318,11 +318,11 @@ export default function ExamplesPage() {
             {/* Quick Action Controls */}
             <div
               data-header-reveal
-              className="flex flex-wrap items-center gap-3 self-start lg:self-end"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto self-start lg:self-end"
             >
               <a
                 href="#blueprint-inspector"
-                className="inline-flex items-center space-x-2 px-4 py-3 bg-[#121214] border border-white/15 hover:border-cyan-400 text-xs font-mono font-bold uppercase tracking-wider text-zinc-200 hover:text-white transition-colors rounded-none active:translate-y-[1px]"
+                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-4 py-3 bg-[#121214] border border-white/15 hover:border-cyan-400 text-xs font-mono font-bold uppercase tracking-wider text-zinc-200 hover:text-white transition-colors rounded-none active:translate-y-[1px]"
               >
                 <ArrowDown className="w-3.5 h-3.5 text-cyan-400" />
                 <span>JUMP TO FULL INSPECTOR</span>
@@ -330,7 +330,7 @@ export default function ExamplesPage() {
 
               <Link
                 href="/tool"
-                className="inline-flex items-center space-x-2 px-5 py-3 bg-cyan-400 text-black hover:bg-white font-mono text-xs font-bold uppercase tracking-[0.18em] transition-colors rounded-none active:translate-y-[1px]"
+                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-5 py-3 bg-cyan-400 text-black hover:bg-white font-mono text-xs font-bold uppercase tracking-[0.18em] transition-colors rounded-none active:translate-y-[1px]"
               >
                 <span>BUILD YOUR OWN BLUEPRINT</span>
                 <ArrowRight className="w-3.5 h-3.5" />

@@ -524,7 +524,7 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               {/* Left Column: Headline & CTAs */}
               <div className="lg:col-span-7">
-                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08]">
+                <h1 className="text-[1.85rem] xs:text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
                   {heroHeadlineWords.map((word, idx) => (
                     <span
                       key={idx}
@@ -775,8 +775,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Dynamic SVG Pipeline Conduit & Milestone Nodes */}
-            <div className="relative mb-6">
+            {/* Dynamic SVG Pipeline Conduit & Milestone Nodes (Desktop Pipeline) */}
+            <div className="relative mb-6 hidden md:block">
               <svg
                 className="w-full h-9 overflow-visible"
                 viewBox="0 0 1200 36"
@@ -883,17 +883,22 @@ export default function Home() {
                   userClickedStoryStepRef.current = true;
                   setActiveStoryStep(0);
                 }}
-                className={`bg-[#0b0b0e] border p-6 flex flex-col justify-between will-change-transform transition-all duration-300 cursor-pointer ${
+                className={`bg-[#0b0b0e] border p-5 sm:p-6 flex flex-col justify-between will-change-transform transition-all duration-300 cursor-pointer ${
                   activeStoryStep === 0
                     ? 'border-cyan-400/60 shadow-[0_0_25px_rgba(34,211,238,0.12)]'
                     : 'border-white/10 opacity-80 hover:opacity-100'
                 }`}
               >
                 <div>
-                  <span className="text-xs font-mono text-cyan-400 uppercase tracking-widest">
-                    Step 01
-                  </span>
-                  <h3 className="text-lg font-bold text-white mt-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono text-cyan-400 uppercase tracking-widest">
+                      Step 01
+                    </span>
+                    <div className="md:hidden w-6 h-6 flex items-center justify-center font-mono text-[10px] font-bold border border-cyan-400 text-cyan-300 bg-cyan-950/80">
+                      01
+                    </div>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-bold text-white mt-2">
                     Share Your Idea Simply
                   </h3>
                   <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
@@ -912,17 +917,22 @@ export default function Home() {
                   userClickedStoryStepRef.current = true;
                   setActiveStoryStep(1);
                 }}
-                className={`bg-[#0b0b0e] border p-6 flex flex-col justify-between will-change-transform transition-all duration-300 cursor-pointer ${
+                className={`bg-[#0b0b0e] border p-5 sm:p-6 flex flex-col justify-between will-change-transform transition-all duration-300 cursor-pointer ${
                   activeStoryStep === 1
                     ? 'border-emerald-400/60 shadow-[0_0_25px_rgba(52,211,153,0.12)]'
                     : 'border-white/10 opacity-80 hover:opacity-100'
                 }`}
               >
                 <div>
-                  <span className="text-xs font-mono text-emerald-400 uppercase tracking-widest">
-                    Step 02
-                  </span>
-                  <h3 className="text-lg font-bold text-white mt-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono text-emerald-400 uppercase tracking-widest">
+                      Step 02
+                    </span>
+                    <div className="md:hidden w-6 h-6 flex items-center justify-center font-mono text-[10px] font-bold border border-emerald-400 text-emerald-300 bg-emerald-950/80">
+                      02
+                    </div>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-bold text-white mt-2">
                     We Handle the Complexity
                   </h3>
                   <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
@@ -941,17 +951,22 @@ export default function Home() {
                   userClickedStoryStepRef.current = true;
                   setActiveStoryStep(2);
                 }}
-                className={`bg-[#0b0b0e] border p-6 flex flex-col justify-between will-change-transform transition-all duration-300 cursor-pointer ${
+                className={`bg-[#0b0b0e] border p-5 sm:p-6 flex flex-col justify-between will-change-transform transition-all duration-300 cursor-pointer ${
                   activeStoryStep === 2
                     ? 'border-amber-400/60 shadow-[0_0_25px_rgba(251,191,36,0.12)]'
                     : 'border-white/10 opacity-80 hover:opacity-100'
                 }`}
               >
                 <div>
-                  <span className="text-xs font-mono text-amber-400 uppercase tracking-widest">
-                    Step 03
-                  </span>
-                  <h3 className="text-lg font-bold text-white mt-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono text-amber-400 uppercase tracking-widest">
+                      Step 03
+                    </span>
+                    <div className="md:hidden w-6 h-6 flex items-center justify-center font-mono text-[10px] font-bold border border-amber-400 text-amber-300 bg-amber-950/80">
+                      03
+                    </div>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-bold text-white mt-2">
                     Download & Start Building
                   </h3>
                   <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
@@ -1072,7 +1087,7 @@ export default function Home() {
               </div>
 
               {/* Sample Switcher + Full Gallery Link */}
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-thin w-full md:w-auto">
                 {PRESETS.map((p) => {
                   const isActive = selectedPresetId === p.id;
                   return (
@@ -1080,7 +1095,7 @@ export default function Home() {
                       key={p.id}
                       type="button"
                       onClick={() => handleSelectPreset(p.id, true)}
-                      className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider transition-all cursor-pointer ${
+                      className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                         isActive
                           ? 'bg-white text-black font-bold'
                           : 'bg-[#121214] text-zinc-400 hover:text-white border border-white/10'
@@ -1092,7 +1107,7 @@ export default function Home() {
                 })}
                 <Link
                   href="/examples"
-                  className="px-3 py-1.5 text-xs font-mono uppercase tracking-wider bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 border border-cyan-500/30 transition-colors"
+                  className="px-3 py-1.5 text-xs font-mono uppercase tracking-wider bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 border border-cyan-500/30 transition-colors whitespace-nowrap shrink-0"
                 >
                   VIEW FULL GALLERY →
                 </Link>

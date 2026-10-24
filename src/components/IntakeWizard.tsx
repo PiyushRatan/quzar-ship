@@ -304,17 +304,17 @@ export function IntakeWizard({
           </div>
 
           {/* Step Pills: Click to smooth-scroll, or simply scroll naturally */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 scrollbar-thin">
             {[
-              { num: 1, label: '1. Your Idea' },
-              { num: 2, label: '2. Inspiration' },
-              { num: 3, label: '3. Launch Style' },
+              { num: 1, shortLabel: '1. Idea', label: '1. Your Idea' },
+              { num: 2, shortLabel: '2. Link', label: '2. Inspiration' },
+              { num: 3, shortLabel: '3. Launch', label: '3. Launch Style' },
             ].map((item) => (
               <button
                 key={item.num}
                 type="button"
                 onClick={() => scrollToStepCard(item.num)}
-                className={`px-3 py-1.5 text-xs font-mono transition-colors cursor-pointer border ${
+                className={`px-2.5 sm:px-3 py-1.5 text-xs font-mono transition-colors cursor-pointer border whitespace-nowrap shrink-0 ${
                   activeStep === item.num
                     ? 'bg-white text-black font-bold border-white'
                     : activeStep > item.num
@@ -322,7 +322,8 @@ export function IntakeWizard({
                     : 'bg-[#121214] text-zinc-400 border-zinc-800 hover:text-zinc-200'
                 }`}
               >
-                {item.label}
+                <span className="sm:hidden">{item.shortLabel}</span>
+                <span className="hidden sm:inline">{item.label}</span>
               </button>
             ))}
           </div>
@@ -331,11 +332,11 @@ export function IntakeWizard({
         {/* Continuous Scroll-Guided Vertical Storytelling Flow (Step 01 -> Step 02 -> Step 03) */}
         <div
           ref={timelineContainerRef}
-          className="relative mt-6 pl-7 sm:pl-10 space-y-8"
+          className="relative mt-6 pl-8 sm:pl-10 space-y-8"
         >
           {/* Left Connecting Vertical Progress Rail */}
           <div
-            className="absolute left-2.5 sm:left-3.5 top-2 bottom-2 w-[2px] bg-zinc-800/90 overflow-hidden"
+            className="absolute left-3 sm:left-3.5 top-2 bottom-2 w-[2px] bg-zinc-800/90 overflow-hidden"
             aria-hidden="true"
           >
             <div
@@ -358,7 +359,7 @@ export function IntakeWizard({
           >
             {/* Step 01 Node Badge on Vertical Rail */}
             <div
-              className={`absolute -left-7 sm:-left-10 top-5 w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center font-mono text-[10px] sm:text-xs font-bold border transition-all duration-300 ${
+              className={`absolute -left-8 sm:-left-10 top-5 w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center font-mono text-[10px] sm:text-xs font-bold border transition-all duration-300 ${
                 activeStep >= 1
                   ? 'bg-cyan-400 text-black border-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.5)]'
                   : 'bg-[#121215] text-zinc-500 border-zinc-700'
@@ -472,7 +473,7 @@ export function IntakeWizard({
           >
             {/* Step 02 Node Badge on Vertical Rail */}
             <div
-              className={`absolute -left-7 sm:-left-10 top-5 w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center font-mono text-[10px] sm:text-xs font-bold border transition-all duration-300 ${
+              className={`absolute -left-8 sm:-left-10 top-5 w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center font-mono text-[10px] sm:text-xs font-bold border transition-all duration-300 ${
                 activeStep >= 2
                   ? 'bg-cyan-400 text-black border-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.5)]'
                   : 'bg-[#121215] text-zinc-500 border-zinc-700'
@@ -526,7 +527,7 @@ export function IntakeWizard({
           >
             {/* Step 03 Node Badge on Vertical Rail */}
             <div
-              className={`absolute -left-7 sm:-left-10 top-5 w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center font-mono text-[10px] sm:text-xs font-bold border transition-all duration-300 ${
+              className={`absolute -left-8 sm:-left-10 top-5 w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center font-mono text-[10px] sm:text-xs font-bold border transition-all duration-300 ${
                 activeStep >= 3
                   ? 'bg-emerald-400 text-black border-emerald-300 shadow-[0_0_12px_rgba(52,211,153,0.5)]'
                   : 'bg-[#121215] text-zinc-500 border-zinc-700'

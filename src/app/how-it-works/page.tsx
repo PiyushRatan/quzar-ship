@@ -694,7 +694,7 @@ export default function HowItWorksPage() {
                 <span>HOW QUZAR SHIP WORKS · 4 SIMPLE STEPS</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08]">
+              <h1 className="text-[1.85rem] xs:text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
                 {HERO_TITLE_WORDS.map((word, idx) => (
                   <span
                     key={idx}
@@ -723,26 +723,30 @@ export default function HowItWorksPage() {
               {/* Interactive Chapter Jump Bar */}
               <div
                 data-hero-pills
-                className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center gap-2.5"
+                className="mt-8 pt-6 border-t border-white/10 flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-thin"
               >
                 {[
                   {
                     num: '01',
+                    shortLabel: 'Idea Intake',
                     label: 'Plain-English Idea Intake',
                     id: 'chapter-01',
                   },
                   {
                     num: '02',
+                    shortLabel: 'Reference Scan',
                     label: 'Competitor & Reference Scan',
                     id: 'chapter-02',
                   },
                   {
                     num: '03',
+                    shortLabel: 'System Selection',
                     label: 'Automatic System Selection',
                     id: 'chapter-03',
                   },
                   {
                     num: '04',
+                    shortLabel: '14-Day Plan',
                     label: '14-Day Checklist & Export',
                     id: 'chapter-04',
                   },
@@ -753,7 +757,7 @@ export default function HowItWorksPage() {
                       key={chap.id}
                       type="button"
                       onClick={() => scrollToChapter(chap.id, idx)}
-                      className={`px-3.5 py-2 text-xs font-mono uppercase tracking-wider border rounded-none transition-all cursor-pointer flex items-center space-x-2 ${
+                      className={`px-3 sm:px-3.5 py-2 text-xs font-mono uppercase tracking-wider border rounded-none transition-all cursor-pointer flex items-center space-x-1.5 sm:space-x-2 whitespace-nowrap shrink-0 ${
                         isCurrent
                           ? 'bg-white text-black border-white font-bold'
                           : 'bg-[#0b0b0e] text-zinc-400 border-white/15 hover:border-white/40 hover:text-white'
@@ -766,7 +770,8 @@ export default function HowItWorksPage() {
                       >
                         {chap.num}
                       </span>
-                      <span>{chap.label}</span>
+                      <span className="sm:hidden">{chap.shortLabel}</span>
+                      <span className="hidden sm:inline">{chap.label}</span>
                     </button>
                   );
                 })}

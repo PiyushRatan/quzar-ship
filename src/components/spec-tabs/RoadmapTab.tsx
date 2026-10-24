@@ -212,7 +212,7 @@ export function RoadmapTab({ sprintDays, onToggleDay }: RoadmapTabProps) {
       </div>
 
       {/* Vertical Connecting Timeline Rail + 14-Day Interactive Cards */}
-      <div className="roadmap-timeline-container relative pl-7 sm:pl-10">
+      <div className="roadmap-timeline-container relative pl-8 sm:pl-10">
         {/* Background Vertical Rail */}
         <div className="absolute left-3 sm:left-4 top-3 bottom-3 w-[2px] bg-zinc-800">
           {/* Dynamic Glowing Emerald/Cyan Rail Fill */}
@@ -234,7 +234,7 @@ export function RoadmapTab({ sprintDays, onToggleDay }: RoadmapTabProps) {
                   type="button"
                   onClick={() => handleCardToggle(d.day)}
                   aria-label={`Toggle Day ${d.day}`}
-                  className={`absolute -left-7 sm:-left-10 top-4 w-6 h-6 sm:w-8 sm:h-6 flex items-center justify-center text-[10px] font-mono font-bold border transition-all cursor-pointer rounded-none z-10 ${
+                  className={`absolute -left-8 sm:-left-10 top-4 w-6 h-6 sm:w-8 sm:h-6 flex items-center justify-center text-[10px] font-mono font-bold border transition-all cursor-pointer rounded-none z-10 ${
                     isDone
                       ? 'bg-emerald-950 border-emerald-400 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.45)]'
                       : 'bg-[#000000] border-zinc-700 text-zinc-400 hover:border-cyan-400 hover:text-white'
@@ -249,19 +249,19 @@ export function RoadmapTab({ sprintDays, onToggleDay }: RoadmapTabProps) {
                     cardRefs.current[d.day] = el;
                   }}
                   onClick={() => handleCardToggle(d.day)}
-                  className={`p-4 border transition-colors cursor-pointer rounded-none select-none ${
+                  className={`p-3.5 sm:p-4 border transition-colors cursor-pointer rounded-none select-none ${
                     isDone
                       ? 'bg-[#0b0b0e] border-emerald-500/50 hover:border-emerald-400'
                       : 'bg-[#0b0b0e] border-t-white/16 border-x-white/10 border-b-white/4 hover:border-cyan-500/40'
                   }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex items-center space-x-2.5">
+                    <div className="flex items-start sm:items-center space-x-2.5">
                       <div
                         ref={(el) => {
                           iconRefs.current[d.day] = el;
                         }}
-                        className="shrink-0"
+                        className="shrink-0 mt-0.5 sm:mt-0"
                       >
                         {isDone ? (
                           <CheckSquare className="w-4 h-4 text-emerald-400" />
@@ -270,7 +270,7 @@ export function RoadmapTab({ sprintDays, onToggleDay }: RoadmapTabProps) {
                         )}
                       </div>
                       <span
-                        className={`text-xs font-bold uppercase tracking-wide ${
+                        className={`text-xs font-bold uppercase tracking-wide break-words ${
                           isDone ? 'text-emerald-300' : 'text-white'
                         }`}
                       >

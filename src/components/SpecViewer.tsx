@@ -250,84 +250,90 @@ ${d.deliverables.map((del) => `- [${d.completed ? 'x' : ' '}] ${del}`).join('\n'
         </div>
       </div>
 
-      {/* Intuitive Tab Rail */}
-      <div className="border-b border-zinc-800 bg-[#09090b] flex overflow-x-auto scrollbar-none">
+      {/* Intuitive Tab Rail with Visible Responsive Horizontal Scrollbar */}
+      <div className="border-b border-zinc-800 bg-[#09090b] flex overflow-x-auto scrollbar-thin">
         <button
           type="button"
           onClick={() => setActiveTab('topology')}
-          className={`flex items-center space-x-2 px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] ${
+          className={`flex items-center space-x-2 px-3 sm:px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] shrink-0 ${
             activeTab === 'topology'
               ? 'border-cyan-400 text-white bg-[#121214] font-bold'
               : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-[#121214]/50'
           }`}
         >
           <Layers className="w-3.5 h-3.5 text-cyan-400" />
-          <span>1. OVERVIEW & ARCHITECTURE</span>
+          <span className="sm:hidden">1. ARCHITECTURE</span>
+          <span className="hidden sm:inline">1. OVERVIEW & ARCHITECTURE</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('ui')}
-          className={`flex items-center space-x-2 px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] ${
+          className={`flex items-center space-x-2 px-3 sm:px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] shrink-0 ${
             activeTab === 'ui'
               ? 'border-cyan-400 text-white bg-[#121214] font-bold'
               : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-[#121214]/50'
           }`}
         >
           <Layout className="w-3.5 h-3.5 text-purple-400" />
-          <span>2. SCREENS & UI PLAN</span>
+          <span className="sm:hidden">2. UI SCREENS</span>
+          <span className="hidden sm:inline">2. SCREENS & UI PLAN</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('roadmap')}
-          className={`flex items-center space-x-2 px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] ${
+          className={`flex items-center space-x-2 px-3 sm:px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] shrink-0 ${
             activeTab === 'roadmap'
               ? 'border-cyan-400 text-white bg-[#121214] font-bold'
               : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-[#121214]/50'
           }`}
         >
           <Calendar className="w-3.5 h-3.5 text-amber-400" />
-          <span>3. 14-DAY LAUNCH PLAN ({progressPercent}%)</span>
+          <span className="sm:hidden">3. ROADMAP ({progressPercent}%)</span>
+          <span className="hidden sm:inline">3. 14-DAY LAUNCH PLAN ({progressPercent}%)</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('costs')}
-          className={`flex items-center space-x-2 px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] ${
+          className={`flex items-center space-x-2 px-3 sm:px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] shrink-0 ${
             activeTab === 'costs'
               ? 'border-cyan-400 text-white bg-[#121214] font-bold'
               : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-[#121214]/50'
           }`}
         >
           <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
-          <span>4. HOSTING & BUDGET</span>
+          <span className="sm:hidden">4. BUDGET</span>
+          <span className="hidden sm:inline">4. HOSTING & BUDGET</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('database')}
-          className={`flex items-center space-x-2 px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] ${
+          className={`flex items-center space-x-2 px-3 sm:px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] shrink-0 ${
             activeTab === 'database'
               ? 'border-cyan-400 text-white bg-[#121214] font-bold'
               : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-[#121214]/50'
           }`}
         >
           <Database className="w-3.5 h-3.5 text-emerald-400" />
-          <span>5. DATABASE ({spec.databaseSchema.tablesCount} TABLES)</span>
+          <span className="sm:hidden">5. DATABASE</span>
+          <span className="hidden sm:inline">5. DATABASE ({spec.databaseSchema.tablesCount} TABLES)</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('api')}
-          className={`flex items-center space-x-2 px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] ${
+          className={`flex items-center space-x-2 px-3 sm:px-4 py-3 border-b-2 font-mono text-xs uppercase tracking-wider transition-colors whitespace-nowrap cursor-pointer rounded-none active:translate-y-[1px] shrink-0 ${
             activeTab === 'api'
               ? 'border-cyan-400 text-white bg-[#121214] font-bold'
               : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-[#121214]/50'
           }`}
         >
           <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
-          <span>6. API & SECURITY</span>
+          <span className="sm:hidden">6. APIS</span>
+          <span className="hidden sm:inline">6. API & SECURITY</span>
         </button>
       </div>
 
@@ -347,10 +353,10 @@ ${d.deliverables.map((del) => `- [${d.completed ? 'x' : ' '}] ${del}`).join('\n'
       </div>
 
       {/* Action Bar: Exports & Ship CTA */}
-      <div className="p-4 sm:p-5 bg-[#09090b] border-t border-zinc-800 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 bg-[#09090b] border-t border-zinc-800 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
         {/* Export Buttons */}
         <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          <span className="text-[11px] text-zinc-500 uppercase tracking-widest mr-2 flex items-center space-x-1">
+          <span className="text-[11px] text-zinc-500 uppercase tracking-widest mr-1 flex items-center space-x-1 shrink-0">
             <Download className="w-3.5 h-3.5 text-cyan-400" />
             <span>EXPORT:</span>
           </span>
@@ -358,7 +364,7 @@ ${d.deliverables.map((del) => `- [${d.completed ? 'x' : ' '}] ${del}`).join('\n'
           <button
             type="button"
             onClick={() => handleExport('architecture')}
-            className="px-3 py-1.5 text-[11px] font-mono font-semibold uppercase tracking-wider text-zinc-300 bg-[#121214] border border-white/10 hover:border-white/30 hover:text-white transition-colors rounded-none active:translate-y-[1px] cursor-pointer"
+            className="flex-1 sm:flex-none px-3 py-1.5 text-[11px] font-mono font-semibold uppercase tracking-wider text-zinc-300 bg-[#121214] border border-white/10 hover:border-white/30 hover:text-white transition-colors rounded-none active:translate-y-[1px] cursor-pointer text-center"
           >
             ARCHITECTURE.MD
           </button>
@@ -366,7 +372,7 @@ ${d.deliverables.map((del) => `- [${d.completed ? 'x' : ' '}] ${del}`).join('\n'
           <button
             type="button"
             onClick={() => handleExport('prisma')}
-            className="px-3 py-1.5 text-[11px] font-mono font-semibold uppercase tracking-wider text-zinc-300 bg-[#121214] border border-white/10 hover:border-white/30 hover:text-white transition-colors rounded-none active:translate-y-[1px] cursor-pointer"
+            className="flex-1 sm:flex-none px-3 py-1.5 text-[11px] font-mono font-semibold uppercase tracking-wider text-zinc-300 bg-[#121214] border border-white/10 hover:border-white/30 hover:text-white transition-colors rounded-none active:translate-y-[1px] cursor-pointer text-center"
           >
             SCHEMA.PRISMA
           </button>
@@ -374,7 +380,7 @@ ${d.deliverables.map((del) => `- [${d.completed ? 'x' : ' '}] ${del}`).join('\n'
           <button
             type="button"
             onClick={() => handleExport('prd')}
-            className="px-3 py-1.5 text-[11px] font-mono font-semibold uppercase tracking-wider text-zinc-300 bg-[#121214] border border-white/10 hover:border-white/30 hover:text-white transition-colors rounded-none active:translate-y-[1px] cursor-pointer"
+            className="flex-1 sm:flex-none px-3 py-1.5 text-[11px] font-mono font-semibold uppercase tracking-wider text-zinc-300 bg-[#121214] border border-white/10 hover:border-white/30 hover:text-white transition-colors rounded-none active:translate-y-[1px] cursor-pointer text-center"
           >
             PRD.MD
           </button>
@@ -382,25 +388,25 @@ ${d.deliverables.map((del) => `- [${d.completed ? 'x' : ' '}] ${del}`).join('\n'
           <button
             type="button"
             onClick={() => handleExport('json')}
-            className="px-3 py-1.5 text-[11px] font-mono font-semibold uppercase tracking-wider text-zinc-300 bg-[#121214] border border-white/10 hover:border-white/30 hover:text-white transition-colors rounded-none active:translate-y-[1px] cursor-pointer"
+            className="flex-1 sm:flex-none px-3 py-1.5 text-[11px] font-mono font-semibold uppercase tracking-wider text-zinc-300 bg-[#121214] border border-white/10 hover:border-white/30 hover:text-white transition-colors rounded-none active:translate-y-[1px] cursor-pointer text-center"
           >
             SPEC JSON
           </button>
 
           {downloadSuccess && (
-            <span className="text-[11px] text-emerald-400 font-mono flex items-center space-x-1 ml-2">
+            <span className="text-[11px] text-emerald-400 font-mono flex items-center space-x-1 ml-2 w-full sm:w-auto mt-1 sm:mt-0">
               <Check className="w-3 h-3" />
               <span>{downloadSuccess} DOWNLOADED</span>
             </span>
           )}
         </div>
 
-        {/* Quzar Studio CTA (Directive 20: Clean Unbracketed CTA) */}
+        {/* Quzar Studio CTA */}
         <a
           href="https://quzar-io.web.app"
           target="_blank"
           rel="noopener noreferrer"
-          className="min-w-[220px] inline-flex items-center justify-center space-x-2 px-5 py-2.5 bg-cyan-400 text-black hover:bg-white hover:text-black font-mono text-xs font-bold uppercase tracking-[0.2em] transition-colors rounded-none active:translate-y-[1px] shadow-[0_0_15px_rgba(6,182,212,0.3)]"
+          className="w-full md:w-auto min-w-[220px] inline-flex items-center justify-center space-x-2 px-5 py-2.5 bg-cyan-400 text-black hover:bg-white hover:text-black font-mono text-xs font-bold uppercase tracking-[0.2em] transition-colors rounded-none active:translate-y-[1px] shadow-[0_0_15px_rgba(6,182,212,0.3)] text-center"
         >
           <span>SHIP WITH QUZAR STUDIO</span>
           <ExternalLink className="w-3.5 h-3.5 text-black" />

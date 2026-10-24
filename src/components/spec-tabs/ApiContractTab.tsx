@@ -178,15 +178,20 @@ export function ApiContractTab({ spec }: ApiContractTabProps) {
       {/* Endpoints Table */}
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2.5">
-          <span className="text-[11px] font-semibold text-zinc-200 uppercase tracking-widest">
-            API ENDPOINT SPECIFICATIONS (CLICK ANY ROUTE TO COPY)
-          </span>
+          <div>
+            <span className="text-[11px] font-semibold text-zinc-200 uppercase tracking-widest block">
+              API ENDPOINT SPECIFICATIONS (CLICK ANY ROUTE TO COPY)
+            </span>
+            <span className="sm:hidden text-[10px] text-cyan-400 font-mono mt-0.5 block">
+              ← Swipe horizontally to view all columns →
+            </span>
+          </div>
           <span className="text-[11px] text-zinc-400 font-sans">
             REST & real-time streaming routes with role permissions
           </span>
         </div>
 
-        <div className="api-endpoints-table overflow-x-auto border border-zinc-800 bg-[#0b0b0e] rounded-none">
+        <div className="api-endpoints-table overflow-x-auto scrollbar-thin border border-zinc-800 bg-[#0b0b0e] rounded-none">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-[#000000] border-b border-zinc-800 text-[10px] text-zinc-400 uppercase tracking-widest">

@@ -195,9 +195,9 @@ export function CodeBlock({
       </div>
 
       {/* Bottom Status Footer */}
-      <div className="flex items-center justify-between px-3.5 py-1.5 bg-[#0b0b0e] border-t border-zinc-900 text-[10px] text-zinc-500">
-        <span>CLICK ANY LINE TO HIGHLIGHT OR COPY DIRECTLY INTO CURSOR / CLAUDE CODE</span>
-        <span className="text-emerald-400 uppercase tracking-wider">UTF-8 READY</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 px-3.5 py-1.5 bg-[#0b0b0e] border-t border-zinc-900 text-[10px] text-zinc-500">
+        <span className="truncate">CLICK ANY LINE TO HIGHLIGHT OR COPY DIRECTLY INTO CURSOR / CLAUDE CODE</span>
+        <span className="text-emerald-400 uppercase tracking-wider shrink-0">UTF-8 READY</span>
       </div>
     </div>
   );

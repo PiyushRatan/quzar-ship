@@ -13,10 +13,10 @@ const DESKTOP_NAV_ITEMS = [
 ] as const;
 
 const MOBILE_NAV_ITEMS = [
-  { label: 'Home', href: '/' },
-  { label: 'How It Works', href: '/how-it-works' },
-  { label: 'Examples', href: '/examples' },
-  { label: 'Use Tool', href: '/tool' },
+  { shortLabel: 'Home', fullLabel: 'Home', href: '/' },
+  { shortLabel: 'Works', fullLabel: 'How It Works', href: '/how-it-works' },
+  { shortLabel: 'Examples', fullLabel: 'Examples', href: '/examples' },
+  { shortLabel: 'Tool', fullLabel: 'Use Tool', href: '/tool' },
 ] as const;
 
 export function Header() {
@@ -66,19 +66,20 @@ export function Header() {
         </nav>
 
         {/* Right CTA */}
-        <div className="flex items-center space-x-3 shrink-0">
+        <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
           {isToolPage ? (
             <Link
               href="/"
-              className="inline-flex items-center space-x-2 px-3.5 py-1.5 text-xs font-mono text-zinc-300 bg-[#121214] border border-white/10 rounded-none hover:border-cyan-400/50 hover:text-white transition-colors"
+              className="inline-flex items-center space-x-1.5 sm:space-x-2 px-2.5 sm:px-3.5 py-1.5 text-xs font-mono text-zinc-300 bg-[#121214] border border-white/10 rounded-none hover:border-cyan-400/50 hover:text-white transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>BACK TO HOME</span>
+              <span className="hidden sm:inline">BACK TO HOME</span>
+              <span className="sm:hidden">HOME</span>
             </Link>
           ) : (
             <Link
               href="/tool"
-              className="inline-flex items-center space-x-2 px-4 py-2 text-xs font-mono font-bold text-black bg-white border border-white rounded-none hover:bg-cyan-400 hover:border-cyan-400 transition-colors active:translate-y-[1px]"
+              className="inline-flex items-center space-x-1.5 sm:space-x-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-mono font-bold text-black bg-white border border-white rounded-none hover:bg-cyan-400 hover:border-cyan-400 transition-colors active:translate-y-[1px]"
             >
               <span className="tracking-widest uppercase">USE TOOL</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -90,7 +91,7 @@ export function Header() {
       {/* Mobile Single-Tap Navigation Bar */}
       <nav
         aria-label="Mobile Navigation"
-        className="md:hidden w-full border-t border-white/10 bg-[#050507]/95 px-2 sm:px-4"
+        className="md:hidden w-full border-t border-white/10 bg-[#050507]/95 px-1 sm:px-4"
       >
         <div className="grid grid-cols-4 w-full">
           {MOBILE_NAV_ITEMS.map((item) => {
@@ -100,13 +101,14 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? 'page' : undefined}
-                className={`py-2.5 text-center font-mono text-[11px] uppercase tracking-wider rounded-none transition-colors ${
+                className={`py-2 text-center font-mono text-[11px] uppercase tracking-wider whitespace-nowrap rounded-none transition-colors ${
                   active
                     ? 'border-b-2 border-cyan-400 text-white font-semibold bg-white/[0.03]'
                     : 'border-b-2 border-transparent text-zinc-400 hover:text-white'
                 }`}
               >
-                {item.label}
+                <span className="sm:hidden">{item.shortLabel}</span>
+                <span className="hidden sm:inline">{item.fullLabel}</span>
               </Link>
             );
           })}

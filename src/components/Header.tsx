@@ -35,9 +35,7 @@ export function Header() {
       <div className="w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
         {/* Brand Mark */}
         <Link href="/" className="flex items-center space-x-3 group rounded-none shrink-0">
-          <div className="w-7 h-7 bg-white text-black flex items-center justify-center font-mono font-extrabold text-xs border border-white rounded-none group-hover:bg-cyan-400 group-hover:border-cyan-400 transition-colors">
-            QS
-          </div>
+          <img src="/logo-mark.png" alt="Quzar Ship Emblem" className="w-7 h-7 object-contain" />
           <span className="font-mono text-sm font-bold tracking-wider text-white">
             QUZAR SHIP
           </span>

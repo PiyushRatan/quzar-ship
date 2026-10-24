@@ -18,6 +18,37 @@ export const metadata: Metadata = {
   title: "Quzar Ship — Product Architecture & Specification Engine",
   description:
     "Turn product concepts and competitor URLs into production-ready system topologies, Prisma database schemas, API contracts, and 14-day sprint roadmaps.",
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  openGraph: {
+    type: 'website',
+    title: 'Quzar Ship — Product Architecture & Specification Engine',
+    description:
+      'Turn product concepts and competitor URLs into production-ready system topologies, Prisma database schemas, API contracts, and 14-day sprint roadmaps.',
+    images: [
+      {
+        url: '/opengraph.png',
+        width: 1200,
+        height: 630,
+        alt: 'Quzar Ship — Product Architecture & Specification Engine',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Quzar Ship — Product Architecture & Specification Engine',
+    description:
+      'Turn product concepts and competitor URLs into production-ready system topologies, Prisma database schemas, API contracts, and 14-day sprint roadmaps.',
+    images: ['/twitter-image.png'],
+  },
 };
 
 export default function RootLayout({
